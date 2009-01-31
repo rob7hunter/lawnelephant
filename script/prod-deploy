@@ -1,0 +1,16 @@
+cp -r $HOME/Documents/lawnelephant /tmp/le-release
+
+# delete some of the stuff we don't care about
+rm -rf /tmp/le-release/data
+
+tar czf /tmp/le-release.tar.gz /tmp/le-release
+
+scp /tmp/le-release.tar.gz robhunter.org:/home/rob
+
+rm -f /tmp/le-release.tar.gz
+rm -rf /tmp/le-release
+
+# now finish up on the prod server
+ssh robhunter.org 'gunzip /home/rob/le-release.tar.gz; tar xf /home/rob/le-release.tar; rm -f /home/rob/le-release.tar; rm -rf /home/rob/le-prod-code/lawnelephant; mv /home/rob/tmp/le-release /home/rob/le-prod-code/lawnelephant; rm -rf /home/rob/tmp'
+
+echo "all good, probably."
