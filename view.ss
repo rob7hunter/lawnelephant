@@ -31,7 +31,8 @@
 
 (define (delete-entry-view feat-req-rec)
   (** " "
-      (web-link "[delete]" (body-as-url (req) (delete-rec! feat-req-rec) "done."))))
+      (web-link "[delete]" (body-as-url (req) (delete-rec! feat-req-rec) 
+                                        (index-page-view)))))
 
 (define (base-design #:title (title "lawnelephant"))
   (design
