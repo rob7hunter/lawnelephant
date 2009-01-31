@@ -1,0 +1,76 @@
+#hd img {
+    margin: 1em;
+}
+a {
+    text-decoration: none;
+    color: #55aa43;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#welcome {
+    float: right;
+    position: absolute;
+    right: 0px;
+}
+
+
+body {
+}
+
+#requests {
+    text-align: center;
+}
+
+#requests > form > label {
+
+    font-size: 2em;
+    display: block;
+
+}
+
+#requests input, textarea {
+    font-size: 1.5em;
+}
+#requests > form > textarea {
+}
+
+#requests input {
+    margin: 1em;
+    color: #55aa43;
+}
+#bd > ul > li {
+    font-size: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+#requests > form > textarea {
+
+    width: 100%;
+}
+
+.simple > li {
+
+    margin-right: 1em;
+    display: inline;
+    font-size: 1.5em;
+}
+
+#bd {
+}
+
+#ft {
+    text-align: center;
+    margin-top: 4em;
+    margin-bottom: 4em;
+}
+
+#hd {
+    text-align: center;
+}
+
+
+
+

@@ -1,0 +1,15 @@
+Style guide for lawnelephant developers:
+========================================
+
+* You code should be a max of 90 characters wide (inclusive).  The
+  exception is for strings that are really long--it's okay if these
+  line break on a 90-char wide buffer.
+
+* Indent correctly.
+
+* Name new files with a .ss extension (not .scm).  Apparently this is
+  a better, more cross-platform friendly way of doing things in PLT.
+  (I know this hasn't been done universally in LeftParen, but we're
+  trying to get there.)
+
+

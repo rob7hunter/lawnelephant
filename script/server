@@ -1,0 +1,1 @@
+"mzscheme" -r serve.scm $1

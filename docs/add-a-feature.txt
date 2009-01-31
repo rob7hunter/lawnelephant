@@ -1,0 +1,21 @@
+How you add a feature (or fix a bug) in Lawn Elephant
+=====================================================
+
+* If you are doing a really quick bug fix or very very small feature,
+  then you can just check it into the master Lawn Elephant branch (if
+  you have write access).
+
+* If it's a bigger feature, I recommend writing the feature on a
+  branch, and then, once it's done, merging it (carefully) into the
+  master branch:
+
+  % git branch my-new-feature-branch
+  % git checkout my-new-feature-branch (switch to it)
+  
+  (now write your feature, using git diff, add, commit, etc.  When you
+  are pushing changes to the server try "git push origin
+  my-new-feature-branch")
+
+* If you don't have write access to the master branch, now just email
+  us and let us know we should evalutate your patch.  If you do have
+  write access, you should go ahead and merge in your patch:

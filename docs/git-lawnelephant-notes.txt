@@ -1,0 +1,82 @@
+How we use git on the Lawnelephant project.  We're new at git it, so let
+us know if we're not doing something right.
+
+Basic structure:
+================
+
+vegashacker and gersteni have write access to the master branch.  For
+small changes, we can make them directly on that branch.  For bigger
+changes we should probably make a separate branch and "code review" it
+with the other person before merging on to master.  (This is very much
+like the process will be for other people to contribute to the
+source--we'll need to write a doc on that.)
+
+;; make sure you are on the write branch before you start coding (if
+;; you only have one branch then you'll always be on master).
+% git checkout master
+
+;; code up your changes ...
+
+;; see what you've changed:
+% git status
+
+;; when you think you're ready to checkin...
+
+;; very important!! you want to make sure you are checking in the right
+;; stuff!
+% git diff
+
+% git add <files you want to check in>
+
+% git commit -m "a well-written checkin comment"
+
+;; to get it on github...
+% git push 
+
+Pulling changes from master:
+============================
+
+You'll want to do this a lot.  Otherwise, you'll stray far from
+"mainline" and it'll be harder/more confusing to merge.
+
+% git pull origin master
+
+Merging:
+========
+
+A common scenario is that you are working on a change, and you pull
+form master to get to the bleeding edge mainline, and there's an error
+saying one or more of your files are out of date.  This is because
+they've changed on mainline since you started working.  You want to
+merge in the changes from mainline into the changes you've made.
+
+Option 1: If you feel you are ready to commit your changes, go ahead
+and commit them as normal, and the merge will happen.  Look at the
+diff on github to make sure it got the merge right and didn't wipe out
+whatever changes you were making.
+
+Option 2 (recommended): Stash away your current changes.
+
+% git stash
+
+Then pull changes from master:
+
+% git pull origin master
+
+Then apply your stashed changes locally:
+
+% git stash apply
+
+This performs the merge.  If, after the merge, so see something like
+
+Auto-merged main.scm
+CONFLICT (content): Merge conflict in main.scm
+
+then you should go into every file that conflicted and manually edit
+it (carefully!) to be correct.  Then just git add the files that are fixed.  E.g.,
+
+% git add main.scm
+% git commit -m "that was fun" main.scm
+
+
+
