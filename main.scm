@@ -10,7 +10,7 @@
   (index-page-view))
 
 (define-session-page (signin-page req sesh)
-  (welcome-message sesh))
+  (welcome-message sesh #:no-register #t))
 
 (define-admin-session-page (adminified-index-page req sesh)
   #:blank #t
