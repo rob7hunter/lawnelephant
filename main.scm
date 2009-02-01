@@ -10,6 +10,7 @@
   (index-page-view sesh))
 
 (define-page (feature-detail-page req feat-id)
+  #:blank #t
   (only-rec-of-type feat-id feature-request (f)
                     (feature-detail-page-view f)))
 
