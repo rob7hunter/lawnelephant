@@ -26,6 +26,7 @@
                          (get-feature-requests))))
          (div ((id "ft"))
               (ul ((class "simple"))
+                  (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
                   (li (a ((href "mailto:ask@lawnelephant.com"))
                          "ask@lawnelephant.com")))))))
 
