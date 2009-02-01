@@ -5,7 +5,7 @@
 (define-app my-app
   (index-page (url "/"))
   (feature-detail-page (url "/feature/" (string-arg)))
-  (feature-feed-page (url "/atom"))
+  (feature-feed-page (url "/atom.xml"))
   (signin-page (url "/signin"))
   (adminified-index-page (url "/admin"))
   )
