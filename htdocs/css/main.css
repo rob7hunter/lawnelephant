@@ -1,3 +1,7 @@
+.explanation {
+    font-size: 1.5em;
+}
+
 p {
     font-size: 1.5em;
     margin: 1em;
@@ -50,7 +54,6 @@ body {
     color: #55aa43;
 }
 #bd > ul > li {
-    font-size: 1.5em;
     margin-top: 1em;
     margin-bottom: 1em;
 }

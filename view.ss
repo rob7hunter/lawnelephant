@@ -29,7 +29,7 @@
                   (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
                   (li (a ((href "mailto:ask@lawnelephant.com"))
                          "ask@lawnelephant.com")))))))
-
+  
 (define (feature-detail-page-view feat)
   (let ((exp (rec-prop feat 'explanation)))
     (page
@@ -49,14 +49,18 @@
                            "ask@lawnelephant.com"))))))))
 
 (define (feature-req-view sesh feat)
-  `(li ,(xexpr-if (can-vote-on? sesh feat)
-                  (** (web-link "[vote up!]" (make-up-voter-url sesh feat))
-                      " "))
-       ,(format "~A pts " (vote-score feat))
-       ,(rec-prop feat 'explanation)
-       " " ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
-       ,(xexpr-if (in-admin-mode?)
-                  (delete-entry-view feat))))
+  `(li 
+     (span ((class "explanation"))
+       ,(rec-prop feat 'explanation))
+       (div ((class "explanation-rest"))
+           ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
+           " "
+           ,(xexpr-if (can-vote-on? sesh feat)
+                      (** (web-link "[vote up!]" (make-up-voter-url sesh feat))
+                          " "))
+           ,(format "~A pts " (vote-score feat))
+           ,(xexpr-if (in-admin-mode?)
+                      (delete-entry-view feat)))))
 
 (define-page (feature-feed-page req)
              #:blank #t
