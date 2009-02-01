@@ -32,7 +32,17 @@
 (define (feature-detail-page-view feat)
   (page
    #:design (base-design)
-   `(p ,(rec-prop feat 'explanation))))
+   `(div ((id "doc"))
+         (div ((id "hd"))
+              (span ((id "header")) 
+                    ,(web-link "lawnelephant.com" (setting *WEB_APP_URL*)) " > feature details"))
+         (div ((id "bd"))
+              (p ,(rec-prop feat 'explanation)))
+         (div ((id "ft"))
+              (ul ((class "simple"))
+                  (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
+                  (li (a ((href "mailto:ask@lawnelephant.com"))
+                         "ask@lawnelephant.com")))))))
 
 (define (feature-req-view feat)
   `(li ,(rec-prop feat 'explanation)
@@ -51,10 +61,10 @@
                         (map (lambda (fr) 
                                (let ((explanation (rec-prop fr 'explanation)))
                                  (atom-item 
-                                        #:title (string-ellide explanation 40)
-                                        #:url (string-append (setting *WEB_APP_URL*) "feature/" (rec-id fr))
-                                        #:updated-epoch-seconds (rec-prop fr 'created-at)
-                                        #:content explanation)))
+                                    #:title (string-ellide explanation 40)
+                                    #:url (string-append (setting *WEB_APP_URL*) "feature/" (rec-id fr))
+                                    #:updated-epoch-seconds (rec-prop fr 'created-at)
+                                    #:content explanation)))
                                (get-feature-requests))))
 
 (define (delete-entry-view feat-req-rec)
