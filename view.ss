@@ -7,6 +7,7 @@
          "admin.ss")
 
 (provide index-page-view
+         feature-detail-page-view
          base-design
          )
 
@@ -21,15 +22,23 @@
                    ,(form '((explanation "" long-text))
                           #:submit-label "Request a Feature"
                           #:init '((type . feature-request))))
-              (ul ,@(map (lambda (fr) `(li ,(rec-prop fr 'explanation)
-                                           ,(xexpr-if (in-admin-mode?)
-                                                      (delete-entry-view fr))))
-                         (get-feature-requests))))
+              (ul ,@(map feature-req-view (get-feature-requests))))
          (div ((id "ft"))
               (ul ((class "simple"))
                   (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
                   (li (a ((href "mailto:ask@lawnelephant.com"))
                          "ask@lawnelephant.com")))))))
+
+(define (feature-detail-page-view feat)
+  (page
+   #:design (base-design)
+   `(p ,(rec-prop feat 'explanation))))
+
+(define (feature-req-view feat)
+  `(li ,(rec-prop feat 'explanation)
+       " " ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
+       ,(xexpr-if (in-admin-mode?)
+                  (delete-entry-view feat))))
 
 (define-page (feature-feed-page req)
              #:blank #t
@@ -45,7 +54,6 @@
                                             #:updated-epoch-seconds (current-seconds)
                                             #:content (rec-prop fr 'explanation)))
                                (get-feature-requests))))
-
 
 (define (delete-entry-view feat-req-rec)
   (** " "

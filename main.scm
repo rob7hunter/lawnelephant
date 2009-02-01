@@ -9,6 +9,10 @@
   #:blank #t
   (index-page-view))
 
+(define-page (feature-detail-page req feat-id)
+  (only-rec-of-type feat-id feature-request (f)
+                    (feature-detail-page-view f)))
+
 (define-session-page (signin-page req sesh)
   (welcome-message sesh #:no-register #t))
 
