@@ -2,6 +2,7 @@
 
 (require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          (planet "util.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
+         "app.scm"
          "data.ss"
          "admin.ss")
 
@@ -30,6 +31,22 @@
                   (li (a ((href "mailto:ask@lawnelephant.com"))
                          "ask@lawnelephant.com")))))))
 
+(define-page (feature-feed-page req)
+             #:blank #t
+             (atom-feed feature-feed-page 
+                        #:feed-title "features for lawnelephant"
+                        #:feed-description "all the features so far"
+                        #:feed-updated/epoch-seconds (current-seconds)
+                        #:author-name "the lawnelephant staff"
+                        #:items 
+                        (map (lambda (fr) (atom-item 
+                                            #:title ""
+                                            #:url "http://lawnelephant.com"
+                                            #:updated-epoch-seconds (current-seconds)
+                                            #:content (rec-prop fr 'explanation)))
+                               (get-feature-requests))))
+
+
 (define (delete-entry-view feat-req-rec)
   (** " "
       (web-link "[delete]" (body-as-url (req) (delete-rec! feat-req-rec) 
@@ -37,6 +54,7 @@
 
 (define (base-design #:title (title "lawnelephant"))
   (design
+   #:atom-feed-page feature-feed-page
    #:css
    '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css"
      "/css/main.css")
