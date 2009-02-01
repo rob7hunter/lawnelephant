@@ -7,7 +7,7 @@
 
 (define-session-page (index-page req sesh)
   #:blank #t
-  (index-page-view))
+  (index-page-view sesh))
 
 (define-page (feature-detail-page req feat-id)
   (only-rec-of-type feat-id feature-request (f)
@@ -18,4 +18,4 @@
 
 (define-admin-session-page (adminified-index-page req sesh)
   #:blank #t
-  (admin-mode (index-page-view)))
+  (admin-mode (index-page-view sesh)))

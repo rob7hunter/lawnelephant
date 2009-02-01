@@ -4,6 +4,7 @@
          (planet "util.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          "app.scm"
          "data.ss"
+         "social.ss"
          "admin.ss")
 
 (provide index-page-view
@@ -11,7 +12,7 @@
          base-design
          )
 
-(define (index-page-view)
+(define (index-page-view sesh)
   (page
    #:design (base-design)
    `(div ((id "doc"))
@@ -22,7 +23,7 @@
                    ,(form '((explanation "" long-text))
                           #:submit-label "Request a Feature"
                           #:init '((type . feature-request))))
-              (ul ,@(map feature-req-view (get-feature-requests))))
+              (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests))))
          (div ((id "ft"))
               (ul ((class "simple"))
                   (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
@@ -44,8 +45,12 @@
                   (li (a ((href "mailto:ask@lawnelephant.com"))
                          "ask@lawnelephant.com")))))))
 
-(define (feature-req-view feat)
-  `(li ,(rec-prop feat 'explanation)
+(define (feature-req-view sesh feat)
+  `(li ,(xexpr-if (can-vote-on? sesh feat)
+                  (** (web-link "[vote up!]" (make-up-voter-url sesh feat))
+                      " "))
+       ,(format "~A pts " (vote-score feat))
+       ,(rec-prop feat 'explanation)
        " " ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
        ,(xexpr-if (in-admin-mode?)
                   (delete-entry-view feat))))
@@ -70,7 +75,7 @@
 (define (delete-entry-view feat-req-rec)
   (** " "
       (web-link "[delete]" (body-as-url (req) (delete-rec! feat-req-rec) 
-                                        (index-page-view)))))
+                                        (redirect-to (page-url index-page))))))
 
 (define (base-design #:title (title "lawnelephant"))
   (design
