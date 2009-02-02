@@ -7,10 +7,13 @@
          "social.ss"
          "admin.ss")
 
+
 (provide index-page-view
          feature-detail-page-view
          base-design
          )
+
+
 
 (define (index-page-view sesh)
   (page
@@ -27,8 +30,8 @@
          (div ((id "ft"))
               (ul ((class "simple"))
                   (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
-                  (li (a ((href "mailto:ask@lawnelephant.com"))
-                         "ask@lawnelephant.com")))))))
+                  (li (a ((href "http://blog.lawnelephant.com")) "blog"))
+                  (li (a ((href "mailto:ask@lawnelephant.com")) "ask@lawnelephant.com")))))))
   
 (define (feature-detail-page-view feat)
   (let ((exp (rec-prop feat 'explanation)))
@@ -41,12 +44,10 @@
                       " > feature details"))
            (div ((id "bd")) (p ,exp))
            (div ((id "ft"))
-                (ul ((class "simple"))
-                    (li (a
-                         ((href "http://github.com/vegashacker/lawnelephant/tree/master"))
-                         "github"))
-                    (li (a ((href "mailto:ask@lawnelephant.com"))
-                           "ask@lawnelephant.com"))))))))
+              (ul ((class "simple"))
+                  (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
+                  (li (a ((href "http://blog.lawnelephant.com")) "blog"))
+                  (li (a ((href "mailto:ask@lawnelephant.com")) "ask@lawnelephant.com"))))))))
 
 (define (feature-req-view sesh feat)
   `(li 
@@ -56,7 +57,7 @@
            ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
            " "
            ,(xexpr-if (can-vote-on? sesh feat)
-                      (** (web-link "[vote up!]" (make-up-voter-url sesh feat))
+                      (** (web-link "[vote up]" (make-up-voter-url sesh feat))
                           " "))
            ,(format "~A pts " (vote-score feat))
            ,(xexpr-if (in-admin-mode?)
@@ -83,6 +84,7 @@
   (** " "
       (web-link "[delete]" (body-as-url (req) (delete-rec! feat-req-rec) 
                                         (redirect-to (page-url index-page))))))
+
 
 (define (base-design #:title (title "lawnelephant"))
   (design
