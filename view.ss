@@ -70,17 +70,22 @@
            (div ((id "ft")) ,standard-footer)))))
 
 (define (feature-req-view sesh feat)
-  `(li (span ((class "explanation"))
-             ,(feature-request-expl feat))
-       (div ((class "explanation-rest"))
-            ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
-            " "
-            ,(xexpr-if (can-vote-on? sesh feat)
-                       (** (web-link "[vote up]" (make-up-voter-url sesh feat))
-                           " "))
-            ,(format "~A pts " (vote-score feat))
-            ,(xexpr-if (in-admin-mode?)
-                       (delete-entry-view feat)))))
+  (let ((is-completed? (rec-prop feat 'completed)))
+    `(li (span ((class "explanation"))
+               ,(feature-request-expl feat))
+         (div ((class "explanation-rest"))
+              ,(xexpr-if is-completed?
+                         "completed ")
+              ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
+              " "
+              ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
+                         (** (web-link "[vote up]" (make-up-voter-url sesh feat))
+                             " "))
+              ,(format "~A pts " (vote-score feat))
+              ,(xexpr-if (in-admin-mode?)
+                         (delete-entry-view feat))
+              ,(xexpr-if (and (not is-completed?) (in-admin-mode?))
+                         (mark-as-completed-view feat))))))
 
 (define-page (feature-feed-page req)
   #:blank #t
@@ -102,7 +107,15 @@
 (define (delete-entry-view feat-req-rec)
   (** " "
       (web-link "[delete]" (body-as-url (req) (delete-rec! feat-req-rec) 
-                                        (redirect-to (page-url index-page))))))
+                                        (redirect-to (page-url adminified-index-page))))))
+
+(define (mark-as-completed-view feat-req-rec)
+  (** " "
+      (web-link "[mark completed]" (body-as-url (req)
+                                                (rec-set-prop! feat-req-rec 'completed #t)
+                                                (store-rec! feat-req-rec)
+                                                (redirect-to (page-url
+                                                              adminified-index-page))))))
 
 (define (base-design #:title (title "lawnelephant"))
   (design
