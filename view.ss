@@ -36,7 +36,7 @@
        ;how to put it there just yet
       ,(raw-str goog-analytics)))
 
-(define (index-page-view sesh)
+(define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
    #:design (base-design)
    `(div ((id "doc"))
@@ -44,13 +44,19 @@
               (img ((src "/i/logo.jpg"))))
          (div ((id "bd"))
               (div ((id "requests"))
-                   ,(form '((explanation "" long-text))
-                          #:submit-label "Request a Feature"
-                          #:init '((type . feature-request))))
+                   ,(form-markup sesh))
               (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests))))
          (div ((id "ft")) ,standard-footer))))
 
-  
+(define (request-feature-form-view sesh)
+  (form '((explanation "" long-text))
+        #:submit-label "Request a Feature"
+        #:init '((type . feature-request))
+        #:error-wrapper (lambda (error-form-view)
+                          (index-page-view sesh #:form-view
+                                           (lambda (sesh) error-form-view)))
+        #:validate feature-request-validator))
+
 (define (feature-detail-page-view feat)
   (let ((exp (rec-prop feat 'explanation)))
     (page
@@ -66,7 +72,7 @@
 (define (feature-req-view sesh feat)
   `(li 
      (span ((class "explanation"))
-       ,(rec-prop feat 'explanation))
+           ,(feature-request-expl feat))
        (div ((class "explanation-rest"))
            ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
            " "
