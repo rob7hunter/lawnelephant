@@ -14,6 +14,21 @@
          )
 
 
+(define goog-analytics 
+  "
+  <script type=\"text/javascript\">
+  var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");
+  document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));
+  </script>
+  <script type=\"text/javascript\">
+  try {
+  var pageTracker = _gat._getTracker(\"UA-7294827-1\");
+  pageTracker._trackPageview();
+  } catch(err) {}</script>
+")
+
+
+
 
 (define (index-page-view sesh)
   (page
@@ -47,7 +62,10 @@
               (ul ((class "simple"))
                   (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
                   (li (a ((href "http://blog.lawnelephant.com")) "blog"))
-                  (li (a ((href "mailto:ask@lawnelephant.com")) "ask@lawnelephant.com"))))))))
+                  (li (a ((href "mailto:ask@lawnelephant.com")) "ask@lawnelephant.com"))))
+           ,(raw-str goog-analytics)))))
+
+
 
 (define (feature-req-view sesh feat)
   `(li 
@@ -93,3 +111,5 @@
    '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css"
      "/css/main.css")
    #:title title))
+
+
