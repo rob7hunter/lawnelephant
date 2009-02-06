@@ -12,4 +12,16 @@ Style guide for lawnelephant developers:
   (I know this hasn't been done universally in LeftParen, but we're
   trying to get there.)
 
+* Comment full-line comments like this:
+
+;; this is a full-line comment
+
+(with two semi-colons, indented as you would any other Scheme
+expression at that position.)
+
+If you add a comment to the end of a line, use one semi-colon, like this:
+
+(define (foo x)
+  (* x x) ; this is a neat line of code!
+
 

@@ -32,8 +32,8 @@
        (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
        (li (a ((href "http://blog.lawnelephant.com")) "blog"))
        (li (a ((href "mailto:ask@lawnelephant.com")) "ask@lawnelephant.com"))
-       ;goog analytics really needs to be just before the closing body tag, but I don't know
-       ;how to put it there just yet
+       ;; XXX goog analytics really needs to be just before the closing body tag, but I
+       ;; don't know how to put it there just yet
       ,(raw-str goog-analytics)))
 
 (define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
@@ -70,41 +70,39 @@
            (div ((id "ft")) ,standard-footer)))))
 
 (define (feature-req-view sesh feat)
-  `(li 
-     (span ((class "explanation"))
-           ,(feature-request-expl feat))
+  `(li (span ((class "explanation"))
+             ,(feature-request-expl feat))
        (div ((class "explanation-rest"))
-           ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
-           " "
-           ,(xexpr-if (can-vote-on? sesh feat)
-                      (** (web-link "[vote up]" (make-up-voter-url sesh feat))
-                          " "))
-           ,(format "~A pts " (vote-score feat))
-           ,(xexpr-if (in-admin-mode?)
-                      (delete-entry-view feat)))))
+            ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
+            " "
+            ,(xexpr-if (can-vote-on? sesh feat)
+                       (** (web-link "[vote up]" (make-up-voter-url sesh feat))
+                           " "))
+            ,(format "~A pts " (vote-score feat))
+            ,(xexpr-if (in-admin-mode?)
+                       (delete-entry-view feat)))))
 
 (define-page (feature-feed-page req)
-             #:blank #t
-             (atom-feed feature-feed-page 
-                        #:feed-title "features for lawnelephant"
-                        #:feed-description "all the features so far"
-                        #:feed-updated/epoch-seconds (current-seconds)
-                        #:author-name "the lawnelephant staff"
-                        #:items 
-                        (map (lambda (fr) 
-                               (let ((explanation (rec-prop fr 'explanation)))
-                                 (atom-item 
-                                    #:title (string-ellide explanation 40)
-                                    #:url (string-append (setting *WEB_APP_URL*) "feature/" (rec-id fr))
-                                    #:updated-epoch-seconds (rec-prop fr 'created-at)
-                                    #:content explanation)))
-                               (get-feature-requests))))
+  #:blank #t
+  (atom-feed feature-feed-page 
+             #:feed-title "features for lawnelephant"
+             #:feed-description "all the features so far"
+             #:feed-updated/epoch-seconds (current-seconds)
+             #:author-name "the lawnelephant staff"
+             #:items 
+             (map (lambda (fr) 
+                    (let ((explanation (rec-prop fr 'explanation)))
+                      (atom-item 
+                       #:title (string-ellide explanation 40)
+                       #:url (string-append (setting *WEB_APP_URL*) "feature/" (rec-id fr))
+                       #:updated-epoch-seconds (rec-prop fr 'created-at)
+                       #:content explanation)))
+                  (get-feature-requests))))
 
 (define (delete-entry-view feat-req-rec)
   (** " "
       (web-link "[delete]" (body-as-url (req) (delete-rec! feat-req-rec) 
                                         (redirect-to (page-url index-page))))))
-
 
 (define (base-design #:title (title "lawnelephant"))
   (design
@@ -113,5 +111,4 @@
    '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css"
      "/css/main.css")
    #:title title))
-
 
