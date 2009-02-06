@@ -27,8 +27,14 @@
   } catch(err) {}</script>
 ")
 
-
-
+(define standard-footer
+  `(ul ((class "simple"))
+       (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
+       (li (a ((href "http://blog.lawnelephant.com")) "blog"))
+       (li (a ((href "mailto:ask@lawnelephant.com")) "ask@lawnelephant.com"))
+       ;goog analytics really needs to be just before the closing body tag, but I don't know
+       ;how to put it there just yet
+      ,(raw-str goog-analytics)))
 
 (define (index-page-view sesh)
   (page
@@ -42,11 +48,8 @@
                           #:submit-label "Request a Feature"
                           #:init '((type . feature-request))))
               (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests))))
-         (div ((id "ft"))
-              (ul ((class "simple"))
-                  (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
-                  (li (a ((href "http://blog.lawnelephant.com")) "blog"))
-                  (li (a ((href "mailto:ask@lawnelephant.com")) "ask@lawnelephant.com")))))))
+         (div ((id "ft")) ,standard-footer))))
+
   
 (define (feature-detail-page-view feat)
   (let ((exp (rec-prop feat 'explanation)))
@@ -58,14 +61,7 @@
                       ,(web-link "lawnelephant.com" (setting *WEB_APP_URL*))
                       " > feature details"))
            (div ((id "bd")) (p ,exp))
-           (div ((id "ft"))
-              (ul ((class "simple"))
-                  (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
-                  (li (a ((href "http://blog.lawnelephant.com")) "blog"))
-                  (li (a ((href "mailto:ask@lawnelephant.com")) "ask@lawnelephant.com"))))
-           ,(raw-str goog-analytics)))))
-
-
+           (div ((id "ft")) ,standard-footer)))))
 
 (define (feature-req-view sesh feat)
   `(li 
