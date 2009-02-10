@@ -27,11 +27,14 @@
   } catch(err) {}</script>
 ")
 
+(define (li-a link name) 
+  `(li (a ((href ,link)) ,name)))
+
 (define standard-footer
   `(ul ((class "simple"))
-       (li (a ((href "http://github.com/vegashacker/lawnelephant/tree/master")) "github"))
-       (li (a ((href "http://blog.lawnelephant.com")) "blog"))
-       (li (a ((href "mailto:ask@lawnelephant.com")) "ask@lawnelephant.com"))
+       ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "github")
+       ,(li-a "http://blog.lawnelephant.com" "blog")
+       ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
        ;; XXX goog analytics really needs to be just before the closing body tag, but I
        ;; don't know how to put it there just yet
       ,(raw-str goog-analytics)))
@@ -45,7 +48,20 @@
          (div ((id "bd"))
               (div ((id "requests"))
                    ,(form-markup sesh))
-              (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests))))
+
+
+              (div ((class "yui-skin-sam"))
+                  (div ((id "demo")(class "yui-navset yui-navset-top"))
+                       (ul ((class "yui-nav"))
+                           (li ((class "selected")(title "active"))
+                               (a ((href "#tab1"))(em "Popular")))
+                           (li (a ((href "#tab2"))(em "Newest")))
+                           (li (a ((href "#tab3"))(em "Completed"))))
+                       (div ((class "yui-content"))
+                            (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests))))
+                            (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests-newest))))
+                            (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests-completed)))))))
+              (script " (function() { var tabView = new YAHOO.widget.TabView('demo');})();"))
          (div ((id "ft")) ,standard-footer))))
 
 (define (request-feature-form-view sesh)
@@ -120,8 +136,8 @@
 (define (base-design #:title (title "lawnelephant"))
   (design
    #:atom-feed-page feature-feed-page
-   #:css
-   '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css"
-     "/css/main.css")
+   #:js '("http://yui.yahooapis.com/combo?2.6.0/build/yahoo-dom-event/yahoo-dom-event.js&2.6.0/build/element/element-beta-min.js&2.6.0/build/tabview/tabview-min.js")
+   #:css '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css&2.6.0/build/base/base-min.css&2.6.0/build/tabview/assets/skins/sam/tabview.css"
+           "/css/main.css")
    #:title title))
 

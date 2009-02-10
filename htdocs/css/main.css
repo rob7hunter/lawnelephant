@@ -57,6 +57,11 @@ body {
     margin-top: 1em;
     margin-bottom: 1em;
 }
+
+ul li {
+    list-style-type: none;
+}
+
 #requests > form > textarea {
 
     width: 100%;

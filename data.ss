@@ -6,13 +6,31 @@
          )
 
 (provide get-feature-requests
+         get-feature-requests-newest
+         get-feature-requests-completed
          feature-request-expl
          feature-request-validator)
 
+;;xxx so much duplication here, needs to be
+;;compressed in a serious way
+
+(define (get-feature-requests-completed)
+  (filter (lambda (x) (rec-prop x 'completed))
+          (load-where #:type 'feature-request
+                      #:sort-by vote-score
+                      #:compare >)))
+
 (define (get-feature-requests)
-  (load-where #:type 'feature-request
-              #:sort-by vote-score
-              #:compare >))
+  (filter (lambda (x) (not (rec-prop x 'completed)))
+          (load-where #:type 'feature-request
+                      #:sort-by vote-score
+                      #:compare >)))
+
+(define (get-feature-requests-newest)
+  (filter (lambda (x) (not (rec-prop x 'completed)))
+          (load-where #:type 'feature-request
+                      #:sort-by 'created-at
+                      #:compare >)))
 
 ;; note that we don't implement this as
 ;; (rec-prop fr-rec 'explanation "missing") because we want to catch, in
