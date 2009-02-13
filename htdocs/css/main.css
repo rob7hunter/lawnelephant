@@ -15,7 +15,6 @@ p {
 }
 a {
     text-decoration: none;
-    color: #55aa43;
 }
 
 a:hover {
@@ -38,7 +37,6 @@ body {
 
 #requests > form > label {
 
-    font-size: 2em;
     display: block;
 
 }
@@ -51,13 +49,15 @@ body {
 
 #requests input {
     margin: 1em;
-    color: #55aa43;
 }
 #bd > ul > li {
     margin-top: 1em;
     margin-bottom: 1em;
 }
 
+ul {
+    margin-left: 1em; 
+}
 ul li {
     list-style-type: none;
 }

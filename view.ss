@@ -92,12 +92,17 @@
          (div ((class "explanation-rest"))
               ,(xexpr-if is-completed?
                          "completed ")
-              ,(web-link "[link]" (page-url feature-detail-page (rec-id feat)))
+              ,(web-link "[more]" (page-url feature-detail-page (rec-id feat)))
               " "
               ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
-                         (** (web-link "[vote up]" (make-up-voter-url sesh feat))
-                             " "))
-              ,(format "~A pts " (vote-score feat))
+                         (** `(span ((class "votelink"))
+                                   ,(web-link "[vote up]" (make-up-voter-url sesh feat))
+                             " ")))
+              (span ((class "pts")) 
+                   ,(format "~A pts " (vote-score feat)))
+
+              ;;the spans above will be used for hacker-news style voting
+
               ,(xexpr-if (in-admin-mode?)
                          (delete-entry-view feat))
               ,(xexpr-if (and (not is-completed?) (in-admin-mode?))
