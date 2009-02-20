@@ -58,7 +58,7 @@
                            (li (a ((href "#tab2"))(em "Newest")))
                            (li (a ((href "#tab3"))(em "Completed"))))
                        (div ((class "yui-content"))
-                            (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests))))
+                            (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests-popular))))
                             (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests-newest))))
                             (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests-completed)))))))
               (script " (function() { var tabView = new YAHOO.widget.TabView('demo');})();"))
@@ -123,7 +123,7 @@
                        #:url (string-append (setting *WEB_APP_URL*) "feature/" (rec-id fr))
                        #:updated-epoch-seconds (rec-prop fr 'created-at)
                        #:content explanation)))
-                  (get-feature-requests))))
+                  (get-feature-requests-popular))))
 
 (define (delete-entry-view feat-req-rec)
   (** " "

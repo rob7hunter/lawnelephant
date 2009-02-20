@@ -5,32 +5,31 @@
          "social.ss"
          )
 
-(provide get-feature-requests
+(provide get-feature-requests-popular
          get-feature-requests-newest
          get-feature-requests-completed
          feature-request-expl
          feature-request-validator)
 
-;;xxx so much duplication here, needs to be
-;;compressed in a serious way
-
 (define (get-feature-requests-completed)
-  (filter (lambda (x) (rec-prop x 'completed))
-          (load-where #:type 'feature-request
-                      #:sort-by vote-score
-                      #:compare >)))
+  (get-feature-requests-generic #:restricted-to completed?
+                                #:sort-by vote-score))
 
-(define (get-feature-requests)
-  (filter (lambda (x) (not (rec-prop x 'completed)))
-          (load-where #:type 'feature-request
-                      #:sort-by vote-score
-                      #:compare >)))
+(define (get-feature-requests-popular)
+  (get-feature-requests-generic #:restricted-to (lambda (x) (not (completed? x)))
+                                #:sort-by vote-score))
 
 (define (get-feature-requests-newest)
-  (filter (lambda (x) (not (rec-prop x 'completed)))
-          (load-where #:type 'feature-request
-                      #:sort-by 'created-at
-                      #:compare >)))
+  (get-feature-requests-generic #:restricted-to (lambda (x) (not (completed? x)))))
+
+(define (get-feature-requests-generic #:restricted-to (filter-fn #f)
+                                      #:sort-by (sort-by 'created-at))
+  (load-where #:type 'feature-request
+              #:sort-by sort-by
+              #:compare >
+              #:restricted-to filter-fn))
+
+(define completed? (cut rec-prop <> 'completed))
 
 ;; note that we don't implement this as
 ;; (rec-prop fr-rec 'explanation "missing") because we want to catch, in
