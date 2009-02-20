@@ -48,8 +48,6 @@
          (div ((id "bd"))
               (div ((id "requests"))
                    ,(form-markup sesh))
-
-
               (div ((class "yui-skin-sam"))
                   (div ((id "demo")(class "yui-navset yui-navset-top"))
                        (ul ((class "yui-nav"))
@@ -57,10 +55,14 @@
                                (a ((href "#tab1"))(em "Popular")))
                            (li (a ((href "#tab2"))(em "Newest")))
                            (li (a ((href "#tab3"))(em "Completed"))))
-                       (div ((class "yui-content"))
-                            (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests-popular))))
-                            (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests-newest))))
-                            (div (ul ,@(map (cut feature-req-view sesh <>) (get-feature-requests-completed)))))))
+                       ,(let ((tab-content
+                               (lambda (feat-fn)
+                                 `(div (ul ,@(map (cut feature-req-view sesh <>)
+                                                  (feat-fn)))))))
+                          `(div ((class "yui-content"))
+                                ,(tab-content get-feature-requests-popular)
+                                ,(tab-content get-feature-requests-newest)
+                                ,(tab-content get-feature-requests-completed)))))
               (script " (function() { var tabView = new YAHOO.widget.TabView('demo');})();"))
          (div ((id "ft")) ,standard-footer))))
 
