@@ -24,4 +24,4 @@
   (store-rec! feat))
 
 (define (vote-score feat)
-  (length (rec-child-prop feat 'votes)))
+  (+ 1 (length (rec-child-prop feat 'votes))))
