@@ -126,7 +126,7 @@
                        #:url (string-append (setting *WEB_APP_URL*) "feature/" (rec-id fr))
                        #:updated-epoch-seconds (rec-prop fr 'created-at)
                        #:content explanation)))
-                  (get-feature-requests-popular))))
+                  (get-feature-requests-newest))))
 
 (define (delete-entry-view feat-req-rec)
   (** " "
