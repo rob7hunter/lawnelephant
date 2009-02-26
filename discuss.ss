@@ -28,12 +28,33 @@
                         (redirect-to redirect)
                         "comment saved."))))
 
-(define (show-all-comments-view parent-item)
-  `(ul ,@(map (lambda (com) `(li ,(show-comment-view com)))
+(define (show-all-comments-view parent-item
+                                #:threaded (threaded #f)
+                                #:redirect-to (redirect #f))
+  `(ul ,@(map (lambda (com) `(li ,(show-comment-view com
+                                                     #:threaded threaded
+                                                     #:reply-link #t
+                                                     #:redirect-to redirect)))
               (get-comments parent-item))))
 
-(define (show-comment-view comment)
-  (rec-prop comment 'body))
+(define (show-comment-view comment
+                           #:threaded (threaded #f)
+                           #:reply-link (reply-link #f)
+                           #:redirect-to (redirect #f))
+  (define (show-indiv-comment c)
+    `(div ((class "comment"))
+          ,(rec-prop c 'body)
+          ,@(splice-if reply-link (comment-on-item-link c
+                                                        #:link-prose "reply"
+                                                        #:redirect-to redirect))))
+  (if (not threaded)
+      (show-indiv-comment comment)
+      ;; o/w we need to do some snazzy recursion...
+      (let lp ((cur comment))
+        `(div ((class "thread"))
+              ,(show-indiv-comment cur)
+              (ul ,@(map (lambda (reply) `(li ,(lp reply)))
+                         (get-comments cur)))))))
 
 (define (get-comments parent-item)
   (load-children parent-item 'comments))

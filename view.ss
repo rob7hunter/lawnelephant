@@ -86,10 +86,10 @@
                 (span ((id "header")) 
                       ,(web-link "lawnelephant.com" (setting *WEB_APP_URL*))
                       " > feature details"))
-           (div ((id "bd")) (p ,exp)
-                ,(comment-on-item-link feat #:redirect-to (page-url feature-detail-page
-                                                                    (rec-id feat)))
-                ,(show-all-comments-view feat))
+           ,(let ((detail-url (page-url feature-detail-page (rec-id feat))))
+             `(div ((id "bd")) (p ,exp)
+                   ,(comment-on-item-link feat #:redirect-to detail-url)
+                   ,(show-all-comments-view feat #:threaded #t #:redirect-to detail-url)))
            (div ((id "ft")) ,standard-footer)))))
 
 (define (feature-req-view sesh feat)
