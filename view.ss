@@ -5,6 +5,7 @@
          "app.scm"
          "data.ss"
          "social.ss"
+         "discuss.ss"
          "admin.ss")
 
 
@@ -85,7 +86,10 @@
                 (span ((id "header")) 
                       ,(web-link "lawnelephant.com" (setting *WEB_APP_URL*))
                       " > feature details"))
-           (div ((id "bd")) (p ,exp))
+           (div ((id "bd")) (p ,exp)
+                ,(comment-on-item-link feat #:redirect-to (page-url feature-detail-page
+                                                                    (rec-id feat)))
+                ,(show-all-comments-view feat))
            (div ((id "ft")) ,standard-footer)))))
 
 (define (feature-req-view sesh feat)
