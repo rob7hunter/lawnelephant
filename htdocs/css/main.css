@@ -1,3 +1,26 @@
+.comment {
+    font-size: 1.5em;
+}
+
+div > .reply-link {
+    font-size: 1em;
+}
+#bd > ul > li {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+ul {
+    margin-left: 1em; 
+}
+ul li {
+    list-style-type: none;
+}
+
+.thread {
+    margin: 0em;
+}
+
 h1 {
     font-size: 2em;
 }
@@ -8,7 +31,9 @@ h1 {
 
 p {
     font-size: 1.5em;
-    margin: 1em;
+    margin-left: 0em;
+    margin-bottom: .0em;
+    margin-top: 0em;
 }
 #header {
     margin: 1em;
@@ -35,7 +60,7 @@ a:hover {
 body {
 }
 
-#requests {
+form {
     text-align: center;
 }
 
@@ -54,19 +79,8 @@ body {
 #requests input {
     margin: 1em;
 }
-#bd > ul > li {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
 
-ul {
-    margin-left: 1em; 
-}
-ul li {
-    list-style-type: none;
-}
-
-#requests > form > textarea {
+.text-input {
 
     width: 100%;
 }

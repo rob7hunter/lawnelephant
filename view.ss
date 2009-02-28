@@ -2,6 +2,7 @@
 
 (require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          (planet "util.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
+         mzlib/defmacro
          "app.scm"
          "data.ss"
          "social.ss"
@@ -31,6 +32,7 @@
 (define (li-a link name) 
   `(li (a ((href ,link)) ,name)))
 
+
 (define standard-footer
   `(ul ((class "simple"))
        ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "github")
@@ -39,6 +41,7 @@
        ;; XXX goog analytics really needs to be just before the closing body tag, but I
        ;; don't know how to put it there just yet
       ,(raw-str goog-analytics)))
+
 
 (define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
@@ -87,8 +90,10 @@
                       ,(web-link "lawnelephant.com" (setting *WEB_APP_URL*))
                       " > feature details"))
            ,(let ((detail-url (page-url feature-detail-page (rec-id feat))))
-             `(div ((id "bd")) (p ,exp)
-                   ,(comment-on-item-link feat #:redirect-to detail-url)
+             `(div ((id "bd")) 
+                   (p ,exp)
+                   (p ((class "reply"))
+                         ,(comment-on-item-link feat #:redirect-to detail-url))
                    ,(show-all-comments-view feat #:threaded #t #:redirect-to detail-url)))
            (div ((id "ft")) ,standard-footer)))))
 
@@ -99,7 +104,7 @@
          (div ((class "explanation-rest"))
               ,(xexpr-if is-completed?
                          "completed ")
-              ,(web-link "[more]" (page-url feature-detail-page (rec-id feat)))
+              ,(web-link "[discuss]" (page-url feature-detail-page (rec-id feat)))
               " "
               ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
                          (** `(span ((class "votelink"))

@@ -5,6 +5,7 @@
 
 (require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          (planet "util.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
+         "templates.ss" ;;XXX shouldn't be here - need to abstract out at some point
          )
 
 (provide comment-on-item-link
@@ -18,7 +19,7 @@
   (web-link prose (body-as-url (req)
                                (create-comment-view item #:redirect-to redirect))))
 
-(define (create-comment-view parent-item #:redirect-to (redirect #f))
+(define (create-comment-viewa parent-item #:redirect-to (redirect #f))
   (form '((body "" long-text))
         #:submit-label "Comment"
         #:init '((type . comment))
@@ -27,11 +28,36 @@
                     (if redirect
                         (redirect-to redirect)
                         "comment saved."))))
+;;XXX this doesn't belong in discuss.ss - form does, and needs
+;;an abstracted wrapper. 
+
+(define (create-comment-view parent-item #:redirect-to (redirect #f))
+  (page
+   #:design (base-design)
+   `(div ((id "doc"))
+         (div ((id "hd"))
+              (a ((href "/")) 
+                 (h1 "lawnelephant")))
+         (div ((id "bd"))
+              ,(form '((body "" long-text))
+                        #:submit-label "Comment"
+                        #:init '((type . comment))
+                        #:on-done (lambda (comment-rec)
+                                    (add-child-and-save! parent-item 'comments comment-rec)
+                                    (if redirect
+                                        (redirect-to redirect)
+                                        "comment saved."))))
+         (div ((id "ft")) 
+              (ul ((class "simple"))
+                   ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "github")
+                   ,(li-a "http://blog.lawnelephant.com" "blog")
+                   ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com"))))))
+;;XXX using nonstandard footer - don't want goog analytics to track this page
 
 (define (show-all-comments-view parent-item
                                 #:threaded (threaded #f)
                                 #:redirect-to (redirect #f))
-  `(ul ,@(map (lambda (com) `(li ,(show-comment-view com
+  `(ul ((class "thread")) ,@(map (lambda (com) `(li ,(show-comment-view com
                                                      #:threaded threaded
                                                      #:reply-link #t
                                                      #:redirect-to redirect)))
@@ -44,9 +70,10 @@
   (define (show-indiv-comment c)
     `(div ((class "comment"))
           ,(rec-prop c 'body)
-          ,@(splice-if reply-link (comment-on-item-link c
-                                                        #:link-prose "reply"
-                                                        #:redirect-to redirect))))
+          ,@(splice-if reply-link `(div ((class "reply-link"))
+                                        ,(comment-on-item-link c
+                                                               #:link-prose "reply"
+                                                               #:redirect-to redirect)))))
   (if (not threaded)
       (show-indiv-comment comment)
       ;; o/w we need to do some snazzy recursion...

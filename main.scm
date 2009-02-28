@@ -20,3 +20,4 @@
 (define-admin-session-page (adminified-index-page req sesh)
   #:blank #t
   (admin-mode (index-page-view sesh)))
+
