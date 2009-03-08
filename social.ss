@@ -5,23 +5,39 @@
          )
 
 (provide can-vote-on?
-         make-up-voter-url
+         make-voter-url
          vote-score
          )
 
 ;; voting
 
+;;XXX DRY alert
 (define (can-vote-on? sesh feat)
-  (not (member (session-id sesh) (rec-child-prop feat 'votes))))
+  (not (or (member (session-id sesh) (rec-child-prop feat 'votes))
+           (member (session-id sesh) (rec-child-prop feat 'down-votes)))))
 
-(define (make-up-voter-url sesh feat)
-  (body-as-url (req)
-               (up-vote! sesh feat)
-               (redirect-to (page-url index-page))))
+(define (make-voter-url sesh feat direction)
+  (let ((vote-fn (if (string=? "up" direction) 
+                   up-vote! 
+                   down-vote!)))
+    (body-as-url (req)
+                 (vote-fn sesh feat)
+                 (redirect-to (page-url index-page)))))
 
+;;XXX DRY alert
 (define (up-vote! sesh feat)
   (rec-add-list-prop-elt! feat 'votes (session-id sesh))
   (store-rec! feat))
 
+(define (down-vote! sesh feat)
+  (rec-add-list-prop-elt! feat 'down-votes (session-id sesh))
+  (store-rec! feat))
+
 (define (vote-score feat)
-  (+ 1 (length (rec-child-prop feat 'votes))))
+  (- 
+    (+ 1 (length (rec-child-prop feat 'votes)))
+    (length (rec-child-prop feat 'down-votes))))
+
+
+
+

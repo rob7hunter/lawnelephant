@@ -108,8 +108,12 @@
               " "
               ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
                          (** `(span ((class "votelink"))
-                                   ,(web-link "[vote up]" (make-up-voter-url sesh feat))
-                             " ")))
+                                   ,(web-link "[vote up]" (make-voter-url sesh feat "up")))
+                             " "
+                             `(span ((clas "votelink"))
+                                    ,(web-link "[vote down]" (make-voter-url sesh feat "down")))
+                             " "))
+
               (span ((class "pts")) 
                    ,(format "~A pts " (vote-score feat)))
 
