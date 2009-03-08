@@ -35,7 +35,7 @@
 
 (define standard-footer
   `(ul ((class "simple"))
-       ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "github")
+       ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
        ,(li-a "http://blog.lawnelephant.com" "blog")
        ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
        ;; XXX goog analytics really needs to be just before the closing body tag, but I
