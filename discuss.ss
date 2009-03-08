@@ -49,7 +49,7 @@
                                         "comment saved."))))
          (div ((id "ft")) 
               (ul ((class "simple"))
-                   ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "github")
+                   ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
                    ,(li-a "http://blog.lawnelephant.com" "blog")
                    ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com"))))))
 ;;XXX using nonstandard footer - don't want goog analytics to track this page
