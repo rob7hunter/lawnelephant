@@ -5,10 +5,6 @@
 div > .reply-link {
     font-size: 1em;
 }
-#bd > ul > li {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
 
 ul {
     margin-left: 1em; 
@@ -17,6 +13,9 @@ ul li {
     list-style-type: none;
 }
 
+li {
+    margin-bottom: 1em;
+}
 .thread {
     margin: 0em;
 }
@@ -92,8 +91,6 @@ form {
     font-size: 1.5em;
 }
 
-#bd {
-}
 
 #ft {
     text-align: center;
@@ -104,7 +101,5 @@ form {
 #hd {
     text-align: center;
 }
-
-
 
 
