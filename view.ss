@@ -104,7 +104,13 @@
          (div ((class "explanation-rest"))
               ,(xexpr-if is-completed?
                          "completed ")
-              ,(web-link "[discuss]" (page-url feature-detail-page (rec-id feat)))
+              ,(web-link 
+                 (let ((it (count-comments feat)))
+                   (cond
+                     ((> it 1) (format "[~A comments]" it))
+                     ((< it 1) "[discuss]")
+                     (else (format "[~A comment]" it))))
+                 (page-url feature-detail-page (rec-id feat)))
               " "
               ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
                          (** `(span ((class "votelink"))

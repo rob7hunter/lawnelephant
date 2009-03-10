@@ -11,6 +11,8 @@
 (provide comment-on-item-link
          show-all-comments-view
          show-comment-view
+         get-comments
+         count-comments
          )
 
 (define (comment-on-item-link item
@@ -82,6 +84,13 @@
               ,(show-indiv-comment cur)
               (ul ,@(map (lambda (reply) `(li ,(lp reply)))
                          (get-comments cur)))))))
+
+;;XXX suspect but can't prove that this could be shorter
+(define (count-comments feat)
+  (let ((feats (get-comments feat)))
+    (aif (length feats)
+         (apply + it (map count-comments feats))
+         0)))
 
 (define (get-comments parent-item)
   (load-children parent-item 'comments))
