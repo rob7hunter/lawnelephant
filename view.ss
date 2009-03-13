@@ -29,9 +29,12 @@
   } catch(err) {}</script>
 ")
 
+(define (apply-markup str)
+  (regexp-replace* #px"http://[[:graph:]]*" str 
+                   (lambda (x) (raw-str (format "<a href=\"~A\">~A</a>" x x)))))
+
 (define (li-a link name) 
   `(li (a ((href ,link)) ,name)))
-
 
 (define standard-footer
   `(ul ((class "simple"))
@@ -97,11 +100,24 @@
                    ,(show-all-comments-view feat #:threaded #t #:redirect-to detail-url)))
            (div ((id "ft")) ,standard-footer)))))
 
+;; sort of sidestep the pluralization issue here
+;; XXX DRY alert - probably some macros could reduce LOC
+
+(define (time-ago created)
+  (let ((ago (- (current-seconds) created)))
+    (cond
+      ((> ago (* 2 60 60 24)) (format "~A days ago" (round (/ ago (* 60 60 24)))))
+      ((> ago (* 2 60 60)) (format "~A hours ago" (round (/ ago (* 60 60)))))
+      ((> ago (* 2 60)) (format "~A minutes ago" (round (/ ago (* 60)))))
+      (else (format "~A seconds ago" ago)))))
+
 (define (feature-req-view sesh feat)
   (let ((is-completed? (rec-prop feat 'completed)))
     `(li (span ((class "explanation"))
                ,(feature-request-expl feat))
          (div ((class "explanation-rest"))
+              ,(time-ago (rec-prop feat 'created-at))
+              " "
               ,(xexpr-if is-completed?
                          "completed ")
               ,(web-link 
