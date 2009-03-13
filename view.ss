@@ -29,10 +29,6 @@
   } catch(err) {}</script>
 ")
 
-(define (apply-markup str)
-  (regexp-replace* #px"http://[[:graph:]]*" str 
-                   (lambda (x) (raw-str (format "<a href=\"~A\">~A</a>" x x)))))
-
 (define (li-a link name) 
   `(li (a ((href ,link)) ,name)))
 
@@ -84,9 +80,10 @@
         #:validate feature-request-validator))
 
 (define (feature-detail-page-view feat)
-  (let ((exp (rec-prop feat 'explanation)))
+  (let ((exp-raw (string-trim (rec-prop feat 'explanation)))
+        (exp (feature-request-expl feat)))
     (page
-     #:design (base-design #:title (format "lawnelephant | ~A" (string-ellide exp 10)))
+     #:design (base-design #:title (format "lawnelephant | ~A" (string-ellide exp-raw 10)))
      `(div ((id "doc"))
            (div ((id "hd"))
                 (span ((id "header")) 

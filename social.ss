@@ -24,14 +24,13 @@
                  (vote-fn sesh feat)
                  (redirect-to (page-url index-page)))))
 
-;;XXX DRY alert
-(define (up-vote! sesh feat)
-  (rec-add-list-prop-elt! feat 'votes (session-id sesh))
-  (store-rec! feat))
+(define (make-gen-voter key)
+  (lambda (sesh feat)
+    (rec-add-list-prop-elt! feat key (session-id sesh))
+    (store-rec! feat)))
 
-(define (down-vote! sesh feat)
-  (rec-add-list-prop-elt! feat 'down-votes (session-id sesh))
-  (store-rec! feat))
+(define up-vote! (make-gen-voter 'votes))
+(define down-vote! (make-gen-voter 'down-votes))
 
 (define (vote-score feat)
   (- 
