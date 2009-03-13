@@ -3,12 +3,14 @@
 (require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          (planet "util.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          "social.ss"
+         "markup.ss"
          )
 
 (provide get-feature-requests-popular
          get-feature-requests-newest
          get-feature-requests-completed
          feature-request-expl
+         any-body-markup
          feature-request-validator)
 
 (define (get-feature-requests-completed)
@@ -37,8 +39,11 @@
 ;; record.  But, in reality, if you do see "missing" on the site, it means that
 ;; something got screwed up, or we aren't validating correctly or something.
 (define (feature-request-expl fr-rec)
-  (or (aand (rec-prop fr-rec 'explanation) (string-trim it))
+  (or (aand (rec-prop fr-rec 'explanation) (any-body-markup it))
       "missing"))
+
+(define (any-body-markup str)
+  (markup-body (string-trim str)))
 
 (define (feature-request-validator fr-rec)
   (let ((lookup (rec-prop fr-rec 'explanation)))

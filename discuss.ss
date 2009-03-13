@@ -6,6 +6,7 @@
 (require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          (planet "util.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          "templates.ss" ;;XXX shouldn't be here - need to abstract out at some point
+         "data.ss"
          )
 
 (provide comment-on-item-link
@@ -71,7 +72,7 @@
                            #:redirect-to (redirect #f))
   (define (show-indiv-comment c)
     `(div ((class "comment"))
-          ,(rec-prop c 'body)
+          ,(any-body-markup (rec-prop c 'body))
           ,@(splice-if reply-link `(div ((class "reply-link"))
                                         ,(comment-on-item-link c
                                                                #:link-prose "reply"
