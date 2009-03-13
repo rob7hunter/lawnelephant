@@ -46,7 +46,7 @@
       ,(raw-str goog-analytics)))
 
 
-(define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
+(define (index-page-view sesh #:fmrm-view (form-markup request-feature-form-view))
   (page
    #:design (base-design)
    `(div ((id "doc"))
@@ -179,7 +179,7 @@
 (define (base-design #:title (title "lawnelephant"))
   (design
    #:atom-feed-page feature-feed-page
-   #:js '("http://yui.yahooapis.com/combo?2.6.0/build/yahoo-dom-event/yahoo-dom-event.js&2.6.0/build/element/element-beta-min.js&2.6.0/build/tabview/tabview-min.js")
+   #:js '("http://yui.yahooapis.com/combo?2.6.0/build/yahoo-dom-event/yahoo-dom-event.js&2.6.0/build/element/element-beta-min.js&2.6.0/build/tabview/tabview-min.js" )
    #:css '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css&2.6.0/build/base/base-min.css&2.6.0/build/tabview/assets/skins/sam/tabview.css"
            "/css/main.css")
    #:title title))
