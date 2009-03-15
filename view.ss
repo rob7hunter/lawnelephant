@@ -97,21 +97,35 @@
                    ,(show-all-comments-view feat #:threaded #t #:redirect-to detail-url)))
            (div ((id "ft")) ,standard-footer)))))
 
-;; sort of sidestep the pluralization issue here
-;; XXX DRY alert - probably some macros could reduce LOC
+
+(define (make-ago-string str num)
+  (format "~A ~A ago" 
+          num 
+          (if (eqv? 1 num) 
+            (format "~A" str)
+            (format "~As" str))))
 
 (define (time-ago created)
   (let ((ago (- (current-seconds) created)))
     (cond
-      ((> ago (* 2 60 60 24)) (format "~A days ago" (round (/ ago (* 60 60 24)))))
-      ((> ago (* 2 60 60)) (format "~A hours ago" (round (/ ago (* 60 60)))))
-      ((> ago (* 2 60)) (format "~A minutes ago" (round (/ ago (* 60)))))
-      (else (format "~A seconds ago" ago)))))
+      ((> ago (* 60 60 24)) 
+       (let ((number (round (/ ago (* 60 60 24)))))
+         (make-ago-string "day" number)))
+      ((> ago (* 60 60)) 
+       (let ((number (round (/ ago (* 60 60)))))
+         (make-ago-string "hour" number)))
+      ((> ago (* 60)) 
+       (let ((number (round (/ ago (* 60)))))
+         (make-ago-string "minute" number)))
+      (else 
+        (let ((number (round (/ ago 1))))
+         (make-ago-string "second" number))))))
 
 (define (feature-req-view sesh feat)
   (let ((is-completed? (rec-prop feat 'completed)))
     `(li (span ((class "explanation"))
-               ,(feature-request-expl feat))
+               ,(web-link (string-ellide (feature-request-expl-no-markup feat) 60)
+                          (page-url feature-detail-page (rec-id feat))))
          (div ((class "explanation-rest"))
               ,(time-ago (rec-prop feat 'created-at))
               " "

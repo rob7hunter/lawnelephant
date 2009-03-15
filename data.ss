@@ -11,6 +11,7 @@
          get-feature-requests-completed
          feature-request-expl
          any-body-markup
+         feature-request-expl-no-markup
          feature-request-validator)
 
 (define (get-feature-requests-completed)
@@ -40,6 +41,10 @@
 ;; something got screwed up, or we aren't validating correctly or something.
 (define (feature-request-expl fr-rec)
   (or (aand (rec-prop fr-rec 'explanation) (any-body-markup it))
+      "missing"))
+
+(define (feature-request-expl-no-markup fr-rec)
+  (or (rec-prop fr-rec 'explanation)
       "missing"))
 
 (define (any-body-markup str)
