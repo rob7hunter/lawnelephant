@@ -42,7 +42,7 @@
       ,(raw-str goog-analytics)))
 
 
-(define (index-page-view sesh #:fmrm-view (form-markup request-feature-form-view))
+(define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
    #:design (base-design)
    `(div ((id "doc"))
