@@ -16,25 +16,17 @@
          count-comments
          )
 
-(define (comment-on-item-link item
+(define (comment-on-item-link item sesh
                               #:link-prose (prose "comment")
                               #:redirect-to (redirect #f))
   (web-link prose (body-as-url (req)
-                               (create-comment-view item #:redirect-to redirect))))
+                               (create-comment-view item sesh #:redirect-to redirect))))
 
-(define (create-comment-viewa parent-item #:redirect-to (redirect #f))
-  (form '((body "" long-text))
-        #:submit-label "Comment"
-        #:init '((type . comment))
-        #:on-done (lambda (comment-rec)
-                    (add-child-and-save! parent-item 'comments comment-rec)
-                    (if redirect
-                        (redirect-to redirect)
-                        "comment saved."))))
+
 ;;XXX this doesn't belong in discuss.ss - form does, and needs
 ;;an abstracted wrapper. 
 
-(define (create-comment-view parent-item #:redirect-to (redirect #f))
+(define (create-comment-view parent-item sesh #:redirect-to (redirect #f))
   (page
    #:design (base-design)
    `(div ((id "doc"))
@@ -44,7 +36,8 @@
          (div ((id "bd"))
               ,(form '((body "" long-text))
                         #:submit-label "Comment"
-                        #:init '((type . comment))
+                        #:init `((type . comment)
+                                 (author . ,(session-id sesh)))
                         #:on-done (lambda (comment-rec)
                                     (add-child-and-save! parent-item 'comments comment-rec)
                                     (if redirect
@@ -57,32 +50,34 @@
                    ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com"))))))
 ;;XXX using nonstandard footer - don't want goog analytics to track this page
 
-(define (show-all-comments-view parent-item
+(define (show-all-comments-view sesh parent-item
                                 #:threaded (threaded #f)
                                 #:redirect-to (redirect #f))
-  `(ul ((class "thread")) ,@(map (lambda (com) `(li ,(show-comment-view com
+  `(ul ((class "thread")) ,@(map (lambda (com) `(li ,(show-comment-view sesh com
                                                      #:threaded threaded
                                                      #:reply-link #t
                                                      #:redirect-to redirect)))
               (get-comments parent-item))))
 
-(define (show-comment-view comment
+(define (show-comment-view sesh
+                           comment
                            #:threaded (threaded #f)
                            #:reply-link (reply-link #f)
                            #:redirect-to (redirect #f))
-  (define (show-indiv-comment c)
+  (define (show-indiv-comment c sesh)
     `(div ((class "comment"))
           ,(any-body-markup (rec-prop c 'body))
           ,@(splice-if reply-link `(div ((class "reply-link"))
                                         ,(comment-on-item-link c
+                                                               sesh
                                                                #:link-prose "reply"
                                                                #:redirect-to redirect)))))
   (if (not threaded)
-      (show-indiv-comment comment)
+      (show-indiv-comment comment sesh)
       ;; o/w we need to do some snazzy recursion...
       (let lp ((cur comment))
         `(div ((class "thread"))
-              ,(show-indiv-comment cur)
+              ,(show-indiv-comment cur sesh)
               (ul ,@(map (lambda (reply) `(li ,(lp reply)))
                          (get-comments cur)))))))
 

@@ -13,6 +13,7 @@
 (provide index-page-view
          feature-detail-page-view
          base-design
+         list-page-view
          )
 
 
@@ -33,14 +34,20 @@
   `(li (a ((href ,link)) ,name)))
 
 (define standard-footer
-  `(ul ((class "simple"))
-       ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
+  `(div 
+     (ul ((class "simple"))
+         (li "features:")
+         ,(li-a "/popular" "popular")
+         ,(li-a "/newest" "newest")
+         ,(li-a "/completed" "completed"))
+     (ul ((class "simple"))
+       ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
        ,(li-a "http://blog.lawnelephant.com" "blog")
+       ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
        ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
        ;; XXX goog analytics really needs to be just before the closing body tag, but I
        ;; don't know how to put it there just yet
-      ,(raw-str goog-analytics)))
-
+      ,(raw-str goog-analytics))))
 
 (define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
@@ -51,39 +58,42 @@
                  (h1 "lawnelephant")))
          (div ((id "bd"))
               (div ((id "requests"))
-                   ,(form-markup sesh))
-              (div ((class "yui-skin-sam"))
-                  (div ((id "demo")(class "yui-navset yui-navset-top"))
-                       (ul ((class "yui-nav"))
-                           (li ((class "selected")(title "active"))
-                               (a ((href "#tab1"))(em "Popular")))
-                           (li (a ((href "#tab2"))(em "Newest")))
-                           (li (a ((href "#tab3"))(em "Completed"))))
-                       ,(let ((tab-content
-                               (lambda (feat-fn)
-                                 `(div (ul ,@(map (cut feature-req-view sesh <>)
-                                                  (feat-fn)))))))
-                          `(div ((class "yui-content"))
-                                ,(tab-content get-feature-requests-popular)
-                                ,(tab-content get-feature-requests-newest)
-                                ,(tab-content get-feature-requests-completed)))))
-              (script " (function() { var tabView = new YAHOO.widget.TabView('demo');})();"))
+                   ,(form-markup sesh)))
          (div ((id "ft")) ,standard-footer))))
+
+(define (list-page-view sesh title feat-pool #:form-view (form-markup request-feature-form-view))
+  (page
+   #:design (base-design #:title (format "~A | lawnelephant" title))
+   `(div ((id "doc"))
+         (div ((id "hd"))
+              (a ((href "/")) 
+                 (h1 "lawnelephant")))
+         (div ((id "bd"))
+              (div ((id "requests"))
+                   ,(form-markup sesh))
+              ,(let ((tab-content
+                      (lambda (feat-fn)
+                        `(div (ul ,@(map (cut feature-req-view sesh <>)
+                                                  (feat-fn)))))))
+                 (tab-content feat-pool)))
+         (div ((id "ft")) ,standard-footer))))
+
 
 (define (request-feature-form-view sesh)
   (form '((explanation "" long-text))
         #:submit-label "Request a Feature"
-        #:init '((type . feature-request))
+        #:init `((type . feature-request)
+                 (author. ,(session-id sesh)))
         #:error-wrapper (lambda (error-form-view)
                           (index-page-view sesh #:form-view
                                            (lambda (sesh) error-form-view)))
         #:validate feature-request-validator))
 
-(define (feature-detail-page-view feat)
+(define (feature-detail-page-view sesh feat)
   (let ((exp-raw (string-trim (rec-prop feat 'explanation)))
         (exp (feature-request-expl feat)))
     (page
-     #:design (base-design #:title (format "lawnelephant | ~A" (string-ellide exp-raw 10)))
+     #:design (base-design #:title (format "~A | lawnelephant" (string-ellide exp-raw 15)))
      `(div ((id "doc"))
            (div ((id "hd"))
                 (span ((id "header")) 
@@ -93,8 +103,8 @@
              `(div ((id "bd")) 
                    (p ,exp)
                    (p ((class "reply"))
-                         ,(comment-on-item-link feat #:redirect-to detail-url))
-                   ,(show-all-comments-view feat #:threaded #t #:redirect-to detail-url)))
+                         ,(comment-on-item-link feat sesh #:redirect-to detail-url))
+                   ,(show-all-comments-view sesh feat #:threaded #t #:redirect-to detail-url)))
            (div ((id "ft")) ,standard-footer)))))
 
 

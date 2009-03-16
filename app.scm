@@ -4,6 +4,9 @@
 
 (define-app my-app
   (index-page (url "/"))
+  (popular-page (url "/popular"))
+  (newest-page (url "/newest"))
+  (completed-page (url "/completed"))
   (feature-detail-page (url "/feature/" (string-arg)))
   (feature-feed-page (url "/atom.xml"))
   (signin-page (url "/signin"))
