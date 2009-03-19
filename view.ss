@@ -53,6 +53,7 @@
   (page
    #:design (base-design)
    `(div ((id "doc"))
+         
          (div ((id "hd"))
               (a ((href "/")) 
                  (h1 "lawnelephant")))

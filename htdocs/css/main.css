@@ -69,7 +69,7 @@ form {
 
 }
 
-#requests input, textarea {
+#requests textarea {
     font-size: 1.5em;
 }
 #requests > form > textarea {
