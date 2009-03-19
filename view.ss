@@ -88,7 +88,9 @@
         #:error-wrapper (lambda (error-form-view)
                           (index-page-view sesh #:form-view
                                            (lambda (sesh) error-form-view)))
-        #:validate feature-request-validator))
+        #:validate feature-request-validator
+        #:on-done (lambda (feat)
+                    (redirect-to (page-url feature-detail-page (rec-id feat))))))
 
 (define (feature-detail-page-view sesh feat)
   (let ((exp-raw (string-trim (rec-prop feat 'explanation)))
