@@ -3,17 +3,20 @@
 (require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          (planet "util.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
          )
+
 (provide
   base-design
   li-a
-  ;goog-analytics
-  ;standard-footer
+  goog-analytics
+  standard-footer
   )
+
+
 
 (define (base-design #:title (title "lawnelephant"))
   (design
-   ;#:atom-feed-page feature-feed-page
-   #:js '("http://yui.yahooapis.com/combo?2.6.0/build/yahoo-dom-event/yahoo-dom-event.js&2.6.0/build/element/element-beta-min.js&2.6.0/build/tabview/tabview-min.js")
+   #:js '("http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js"
+          "scripts/init.js")
    #:css '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css&2.6.0/build/base/base-min.css&2.6.0/build/tabview/assets/skins/sam/tabview.css"
            "/css/main.css")
    #:title title))
@@ -36,10 +39,17 @@
 
 
 (define standard-footer
-  `(ul ((class "simple"))
-       ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "github")
+  `(div 
+     (ul ((class "simple"))
+         (li "features:")
+         ,(li-a "/popular" "popular")
+         ,(li-a "/newest" "newest")
+         ,(li-a "/completed" "completed"))
+     (ul ((class "simple"))
+       ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
        ,(li-a "http://blog.lawnelephant.com" "blog")
+       ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
        ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
        ;; XXX goog analytics really needs to be just before the closing body tag, but I
        ;; don't know how to put it there just yet
-      ,(raw-str goog-analytics)))
+      ,(raw-str goog-analytics))))

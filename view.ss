@@ -7,47 +7,16 @@
          "data.ss"
          "social.ss"
          "discuss.ss"
+         "templates.ss"
          "admin.ss")
 
 
 (provide index-page-view
          feature-detail-page-view
-         base-design
          list-page-view
          )
 
 
-(define goog-analytics 
-  "
-  <script type=\"text/javascript\">
-  var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");
-  document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));
-  </script>
-  <script type=\"text/javascript\">
-  try {
-  var pageTracker = _gat._getTracker(\"UA-7294827-1\");
-  pageTracker._trackPageview();
-  } catch(err) {}</script>
-")
-
-(define (li-a link name) 
-  `(li (a ((href ,link)) ,name)))
-
-(define standard-footer
-  `(div 
-     (ul ((class "simple"))
-         (li "features:")
-         ,(li-a "/popular" "popular")
-         ,(li-a "/newest" "newest")
-         ,(li-a "/completed" "completed"))
-     (ul ((class "simple"))
-       ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
-       ,(li-a "http://blog.lawnelephant.com" "blog")
-       ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
-       ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
-       ;; XXX goog analytics really needs to be just before the closing body tag, but I
-       ;; don't know how to put it there just yet
-      ,(raw-str goog-analytics))))
 
 (define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
@@ -170,22 +139,7 @@
               ,(xexpr-if (and (not is-completed?) (in-admin-mode?))
                          (mark-as-completed-view feat))))))
 
-(define-page (feature-feed-page req)
-  #:blank #t
-  (atom-feed feature-feed-page 
-             #:feed-title "features for lawnelephant"
-             #:feed-description "all the features so far"
-             #:feed-updated/epoch-seconds (current-seconds)
-             #:author-name "the lawnelephant staff"
-             #:items 
-             (map (lambda (fr) 
-                    (let ((explanation (rec-prop fr 'explanation)))
-                      (atom-item 
-                       #:title (string-ellide explanation 40)
-                       #:url (string-append (setting *WEB_APP_URL*) "feature/" (rec-id fr))
-                       #:updated-epoch-seconds (rec-prop fr 'created-at)
-                       #:content explanation)))
-                  (get-feature-requests-newest))))
+
 
 (define (delete-entry-view feat-req-rec)
   (** " "
@@ -200,12 +154,4 @@
                                                 (redirect-to (page-url
                                                               adminified-index-page))))))
 
-(define (base-design #:title (title "lawnelephant"))
-  (design
-   #:atom-feed-page feature-feed-page
-   #:js '("http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js"
-          "scripts/init.js")
-   #:css '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css&2.6.0/build/base/base-min.css&2.6.0/build/tabview/assets/skins/sam/tabview.css"
-           "/css/main.css")
-   #:title title))
 
