@@ -17,8 +17,25 @@
          )
 
 
-
 (define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
+  (page
+   #:design (base-design)
+   `(div ((id "doc"))
+         
+         (div ((id "hd"))
+              (a ((href "/")) 
+                 (h1 "lawnelephant")))
+         (div ((id "bd"))
+              (div ((id "elephant-holder"))
+                   (img ((src "i/elephant.jpg"))))
+              (div ((id "commentary"))
+                   ,(web-link "request a feature"
+                             (body-as-url (req)
+                                          (post-feature-view sesh))))
+         (div ((id "ft")) ,standard-footer)))))
+
+
+(define (post-feature-view sesh #:form-view (form-markup request-feature-form-view))
   (page
    #:design (base-design)
    `(div ((id "doc"))
@@ -39,8 +56,10 @@
               (a ((href "/")) 
                  (h1 "lawnelephant")))
          (div ((id "bd"))
-              (div ((id "requests"))
-                   ,(form-markup sesh))
+              (div ((id "commentary"))
+                   ,(web-link "request a feature"
+                             (body-as-url (req)
+                                          (post-feature-view sesh))))
               ,(let ((tab-content
                       (lambda (feat-fn)
                         `(div (ul ,@(map (cut feature-req-view sesh <>)

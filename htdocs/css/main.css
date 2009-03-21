@@ -1,3 +1,18 @@
+#elephant-holder {
+    text-align: center;
+}
+
+#commentary {
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    font-size: 2em;
+}
+
+#commentary > a {
+    text-decoration: underline;
+}
+
 ul .thread {
     margin-top: 1em;
 }
@@ -51,6 +66,7 @@ p {
 }
 a {
     text-decoration: none;
+    color: #3e5e01;
 }
 
 a:hover {
@@ -102,8 +118,7 @@ form {
 
 #ft {
     text-align: center;
-    margin-top: 4em;
-    margin-bottom: 4em;
+    margin-top: 2em;
 }
 
 #hd {
