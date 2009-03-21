@@ -140,18 +140,16 @@
                      (else (format "[~A comment]" it))))
                  (page-url feature-detail-page (rec-id feat)))
               " "
-              ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
-                         (** `(span ((class "votelink"))
-                                   ,(web-link "[vote up]" (make-voter-url sesh feat "up")))
-                             " "
-                             `(span ((clas "votelink"))
-                                    ,(web-link "[vote down]" (make-voter-url sesh feat "down")))
-                             " "))
-
               (span ((class "pts")) 
                    ,(format "~A pts " (vote-score feat)))
 
-              ;;the spans above will be used for hacker-news style voting
+              ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
+                         ;;XXX looks like a named let could work here
+                         (let ((votelink (lambda (dir)
+                                                 `(a ((href ,(make-voter-url sesh feat dir))
+                                                      (class ,dir))
+                                                      ,(format "[vote ~A]" dir)))))
+                           (** (votelink "up") " " (votelink "down"))))
 
               ,(xexpr-if (in-admin-mode?)
                          (delete-entry-view feat))
