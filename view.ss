@@ -140,8 +140,11 @@
                      (else (format "[~A comment]" it))))
                  (page-url feature-detail-page (rec-id feat)))
               " "
+
               (span ((class "pts")) 
-                   ,(format "~A pts " (vote-score feat)))
+                   ,(format "~A" (vote-score feat)))
+
+              " pts"
 
               ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
                          ;;XXX looks like a named let could work here
@@ -149,7 +152,7 @@
                                                  `(a ((href ,(make-voter-url sesh feat dir))
                                                       (class ,dir))
                                                       ,(format "[vote ~A]" dir)))))
-                           (** (votelink "up") " " (votelink "down"))))
+                           (** " " (votelink "up") " " (votelink "down"))))
 
               ,(xexpr-if (in-admin-mode?)
                          (delete-entry-view feat))
