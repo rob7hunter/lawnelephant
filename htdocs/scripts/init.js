@@ -1,7 +1,9 @@
 $(document).ready(function() {
 
+    // if there is an input box, set focus there
     $(".text-input").focus();
 
+    // attach click even handler to all downvotes
     $("a.down").click(function(ev)
     {
         ev.preventDefault();
@@ -21,6 +23,7 @@ $(document).ready(function() {
         return false;
     });
 
+    // attach click event handler to all upvotes (XXX DRY alert)
     $("a.up").click(function(ev)
     {
         ev.preventDefault();
