@@ -12,15 +12,15 @@
 
 (define-session-page (popular-page req sesh)
   #:blank #t
-  (list-page-view sesh "popular" get-feature-requests-popular))
+  (gen-show-list-view "popular" sesh))
 
 (define-session-page (newest-page req sesh)
   #:blank #t
-  (list-page-view sesh "newest" get-feature-requests-newest))
+  (gen-show-list-view "newest" sesh))
 
 (define-session-page (completed-page req sesh)
   #:blank #t
-  (list-page-view sesh "completed" get-feature-requests-completed))
+  (gen-show-list-view "completed" sesh))
 
 (define-session-page (feature-detail-page req sesh feat-id)
   #:blank #t
@@ -30,10 +30,9 @@
 (define-session-page (signin-page req sesh)
   (welcome-message sesh #:no-register #t))
 
-(define-admin-session-page (adminified-index-page req sesh)
+(define-admin-session-page (adminified-index-page req sesh page-type-str)
   #:blank #t
-  (admin-mode (index-page-view sesh)))
-
+  (admin-mode (gen-show-list-view page-type-str sesh)))
 
 ;; caches
 

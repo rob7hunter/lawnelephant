@@ -10,12 +10,10 @@
          "templates.ss"
          "admin.ss")
 
-
 (provide index-page-view
          feature-detail-page-view
-         list-page-view
+         gen-show-list-view
          )
-
 
 (define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
@@ -67,6 +65,12 @@
                  (tab-content feat-pool)))
          (div ((id "ft")) ,standard-footer))))
 
+(define (gen-show-list-view type-str sesh)
+  (list-page-view sesh type-str
+                  (cond ((string=? type-str "popular") get-feature-requests-popular)
+                        ((string=? type-str "newest") get-feature-requests-newest)
+                        ((string=? type-str "completed") get-feature-requests-completed)
+                        (else (e "Unrecognized list type str ~A" type-str)))))
 
 (define (request-feature-form-view sesh)
   (form '((explanation "" long-text))
@@ -164,7 +168,7 @@
 (define (delete-entry-view feat-req-rec)
   (** " "
       (web-link "[delete]" (body-as-url (req) (delete-rec! feat-req-rec) 
-                                        (redirect-to (page-url adminified-index-page))))))
+                                        (redirect-to (page-url index-page))))))
 
 (define (mark-as-completed-view feat-req-rec)
   (** " "

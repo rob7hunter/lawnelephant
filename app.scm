@@ -9,7 +9,7 @@
   (completed-page (url "/completed"))
   (feature-detail-page (url "/feature/" (string-arg)))
   (signin-page (url "/signin"))
-  (adminified-index-page (url "/admin"))
+  (adminified-index-page (url "/admin/" (string-arg)))
   )
 
   
