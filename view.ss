@@ -175,7 +175,6 @@
       (web-link "[mark completed]" (body-as-url (req)
                                                 (rec-set-prop! feat-req-rec 'completed #t)
                                                 (store-rec! feat-req-rec)
-                                                (redirect-to (page-url
-                                                              adminified-index-page))))))
+                                                (redirect-to (page-url index-page))))))
 
 
