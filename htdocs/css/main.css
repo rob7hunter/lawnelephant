@@ -1,14 +1,18 @@
+h1 h2  {
+
+    margin-top: 0.25em;
+    margin-bottom: .25em;
+}
+
+img {
+    border: none;
+    margin: 0em 0em 0em 0em;
+}
+
 #elephant-holder {
     text-align: center;
 }
 
-#commentary {
-    text-align: center;
-    margin-top: 1em;
-    margin-bottom: 1em;
-    font-size: 1.5em;
-    font-weight: bold;
-}
 
 
 ul .thread {
@@ -58,9 +62,6 @@ p {
 #header {
     margin: 1em;
     font-size: 1.5em;    
-}
-#hd img {
-    margin: 1em;
 }
 a {
     text-decoration: none;

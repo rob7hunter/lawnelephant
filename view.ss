@@ -19,14 +19,13 @@
   (page
    #:design (base-design)
    `(div ((id "doc"))
-         
          (div ((id "hd"))
               (a ((href "/")) 
                  (h1 "lawnelephant")))
-         (div ((id "bd"))
+         (div ((id "bd index"))
               (div ((id "elephant-holder"))
                    (img ((src "i/elephant.jpg"))))
-              (div ((id "commentary"))
+              (h2 ((id "commentary"))
                    ,(web-link "request a feature"
                              (body-as-url (req)
                                           (post-feature-view sesh))))
@@ -37,7 +36,6 @@
   (page
    #:design (base-design)
    `(div ((id "doc"))
-         
          (div ((id "hd"))
               (a ((href "/")) 
                  (h1 "lawnelephant")))
@@ -46,9 +44,9 @@
                    ,(form-markup sesh)))
          (div ((id "ft")) ,standard-footer))))
 
-(define (list-page-view sesh title feat-pool #:form-view (form-markup request-feature-form-view))
+(define (newcomments-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
-   #:design (base-design #:title (format "~A | lawnelephant" title))
+   #:design (base-design #:title (format "~A | lawnelephant" "newest comments"))
    `(div ((id "doc"))
          (div ((id "hd"))
               (a ((href "/")) 
@@ -58,6 +56,23 @@
                    ,(web-link "request a feature"
                              (body-as-url (req)
                                           (post-feature-view sesh))))
+
+              )
+         (div ((id "ft")) ,standard-footer))))
+
+
+
+(define (list-page-view sesh title feat-pool #:form-view (form-markup request-feature-form-view))
+  (page
+   #:design (base-design #:title (format "~A | lawnelephant" title))
+   `(div ((id "doc"))
+         (div ((id "hd"))
+              (h1 (a ((href "/")) 
+                     (img ((src "i/miniphant.jpg")))))
+              (h2 ,(web-link "request a feature"
+                             (body-as-url (req)
+                                          (post-feature-view sesh)))))
+         (div ((id "bd"))
               ,(let ((tab-content
                       (lambda (feat-fn)
                         `(div (ul ,@(map (cut feature-req-view sesh <>)
@@ -136,15 +151,12 @@
               " "
               ,(xexpr-if is-completed?
                          "completed ")
-              ,(web-link 
-                 (let ((it (count-comments feat)))
-                   (cond
-                     ((> it 1) (format "[~A comments]" it))
-                     ((< it 1) "[discuss]")
-                     (else (format "[~A comment]" it))))
-                 (page-url feature-detail-page (rec-id feat)))
-              " "
 
+              ,(let ((it (count-comments feat)))
+                   (cond
+                     ((> it 1) (format "[~A comments] " it))
+                     ((< it 1) "")
+                     (else (format "[~A comment] " it))))
               (span ((class "pts")) 
                    ,(format "~A" (vote-score feat)))
 

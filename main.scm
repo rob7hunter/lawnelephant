@@ -10,6 +10,8 @@
   #:blank #t
   (index-page-view sesh))
 
+
+
 (define-session-page (popular-page req sesh)
   #:blank #t
   (gen-show-list-view "popular" sesh))

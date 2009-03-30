@@ -41,6 +41,9 @@
 (define standard-footer
   `(div 
      (ul ((class "simple"))
+         (li "comments:")
+         ,(li-a "/newcomments" "new"))
+     (ul ((class "simple"))
          (li "features:")
          ,(li-a "/popular" "popular")
          ,(li-a "/newest" "newest")
