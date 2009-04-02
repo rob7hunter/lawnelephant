@@ -15,6 +15,16 @@
          gen-show-list-view
          )
 
+
+
+(define (req-link sesh)
+  `(a ((href ,(body-as-url (req)
+                           (post-feature-view sesh))))
+      "request a feature"))
+
+(define (div-footer)
+  `(div ((id "ft")) ,standard-footer))
+
 (define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
    #:design (base-design)
@@ -24,12 +34,9 @@
                  (h1 "lawnelephant")))
          (div ((id "bd index"))
               (div ((id "elephant-holder"))
-                   (img ((src "i/elephant.jpg"))))
-              (h2 ((id "commentary"))
-                   ,(web-link "request a feature"
-                             (body-as-url (req)
-                                          (post-feature-view sesh))))
-         (div ((id "ft")) ,standard-footer)))))
+                   (img ((src "i/elephant.jpg")))))
+         ,(div-footer))))
+              
 
 
 (define (post-feature-view sesh #:form-view (form-markup request-feature-form-view))
@@ -42,7 +49,7 @@
          (div ((id "bd"))
               (div ((id "requests"))
                    ,(form-markup sesh)))
-         (div ((id "ft")) ,standard-footer))))
+         ,(div-footer))))
 
 (define (newcomments-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
@@ -62,6 +69,7 @@
 
 
 
+
 (define (list-page-view sesh title feat-pool #:form-view (form-markup request-feature-form-view))
   (page
    #:design (base-design #:title (format "~A | lawnelephant" title))
@@ -69,16 +77,14 @@
          (div ((id "hd"))
               (h1 (a ((href "/")) 
                      (img ((src "i/miniphant.jpg")))))
-              (h2 ,(web-link "request a feature"
-                             (body-as-url (req)
-                                          (post-feature-view sesh)))))
+              (h2 ,(req-link sesh)))
          (div ((id "bd"))
               ,(let ((tab-content
                       (lambda (feat-fn)
                         `(div (ul ,@(map (cut feature-req-view sesh <>)
                                                   (feat-fn)))))))
                  (tab-content feat-pool)))
-         (div ((id "ft")) ,standard-footer))))
+         ,(div-footer))))
 
 (define (gen-show-list-view type-str sesh)
   (list-page-view sesh type-str
@@ -115,7 +121,7 @@
                    (p ((class "reply"))
                          ,(comment-on-item-link feat sesh #:redirect-to detail-url))
                    ,(show-all-comments-view sesh feat #:threaded #t #:redirect-to detail-url)))
-           (div ((id "ft")) ,standard-footer)))))
+           ,(div-footer)))))
 
 
 (define (make-ago-string str num)
@@ -128,25 +134,25 @@
 (define (time-ago created)
   (let ((ago (- (current-seconds) created)))
     (cond
-      ((> ago (* 60 60 24)) 
-       (let ((number (round (/ ago (* 60 60 24)))))
-         (make-ago-string "day" number)))
-      ((> ago (* 60 60)) 
-       (let ((number (round (/ ago (* 60 60)))))
-         (make-ago-string "hour" number)))
-      ((> ago (* 60)) 
-       (let ((number (round (/ ago (* 60)))))
-         (make-ago-string "minute" number)))
+      ((> ago 86400) 
+       (make-ago-string "day" (round (/ ago 86400))))
+      ((> ago 3600) 
+       (make-ago-string "hour" (round (/ ago 3600))))
+      ((> ago 60) 
+       (make-ago-string "minute" (round (/ ago 60))))
       (else 
-        (let ((number (round (/ ago 1))))
-         (make-ago-string "second" number))))))
+       (make-ago-string "second" ago)))))
 
 (define (feature-req-view sesh feat)
   (let ((is-completed? (rec-prop feat 'completed)))
     `(li (span ((class "explanation"))
-               ,(web-link (string-ellide (feature-request-expl-no-markup feat) 60)
+               ,(web-link (string-ellide (feature-request-expl-no-markup feat) 120)
                           (page-url feature-detail-page (rec-id feat))))
          (div ((class "explanation-rest"))
+              (span ((class "points")) 
+                   ,(format "~A" (vote-score feat)))
+
+              " points posted "
               ,(time-ago (rec-prop feat 'created-at))
               " "
               ,(xexpr-if is-completed?
@@ -157,10 +163,6 @@
                      ((> it 1) (format "[~A comments] " it))
                      ((< it 1) "")
                      (else (format "[~A comment] " it))))
-              (span ((class "pts")) 
-                   ,(format "~A" (vote-score feat)))
-
-              " pts"
 
               ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
                          ;;XXX looks like a named let could work here
@@ -174,8 +176,6 @@
                          (delete-entry-view feat))
               ,(xexpr-if (and (not is-completed?) (in-admin-mode?))
                          (mark-as-completed-view feat))))))
-
-
 
 (define (delete-entry-view feat-req-rec)
   (** " "
