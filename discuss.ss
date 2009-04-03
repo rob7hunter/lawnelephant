@@ -77,12 +77,9 @@
               (ul ,@(map (lambda (reply) `(li ,(lp reply)))
                          (get-comments cur)))))))
 
-;;XXX suspect but can't prove that this could be shorter
-(define (count-comments feat)
-  (let ((feats (get-comments feat)))
-    (aif (length feats)
-         (apply + it (map count-comments feats))
-         0)))
+(define (count-comments feat-or-reply)
+  (let ((comments (get-comments feat-or-reply)))
+    (apply + (length comments) (map count-comments comments))))
 
 (define (get-comments parent-item)
   (load-children parent-item 'comments))
