@@ -17,8 +17,8 @@
   (design
    #:js '("http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js"
           "scripts/init.js")
-   #:css '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css&2.6.0/build/base/base-min.css&2.6.0/build/tabview/assets/skins/sam/tabview.css"
-           "/css/main.css")
+  ; #:css '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css&2.6.0/build/base/base-min.css&2.6.0/build/tabview/assets/skins/sam/tabview.css"
+   #:css '( "/css/main.css")
    #:title title))
 
 (define goog-analytics 
@@ -39,20 +39,10 @@
 
 
 (define standard-footer
-  `(div 
-     (ul ((class "simple"))
-         (li "comments:")
-         ,(li-a "/newcomments" "new"))
-     (ul ((class "simple"))
-         (li "features:")
-         ,(li-a "/popular" "popular")
-         ,(li-a "/newest" "newest")
-         ,(li-a "/completed" "completed"))
-     (ul ((class "simple"))
+  `(ul ((class "simple"))
        ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
        ,(li-a "http://blog.lawnelephant.com" "blog")
        ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
        ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
-       ;; XXX goog analytics really needs to be just before the closing body tag, but I
-       ;; don't know how to put it there just yet
-      ,(raw-str goog-analytics))))
+       ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant")
+       ,(raw-str goog-analytics)))

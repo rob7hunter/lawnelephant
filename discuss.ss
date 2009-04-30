@@ -17,34 +17,41 @@
          )
 
 (define (comment-on-item-link item sesh
-                              #:link-prose (prose "comment")
+                              #:link-prose (prose "reply")
                               #:redirect-to (redirect #f))
   (web-link prose (body-as-url (req)
                                (create-comment-view item sesh #:redirect-to redirect))))
 
-
-;;XXX this doesn't belong in discuss.ss - form does, and needs
-;;an abstracted wrapper. 
 
 (define (create-comment-view parent-item sesh #:redirect-to (redirect #f))
   (page
    #:design (base-design)
    `(div ((id "doc"))
          (div ((id "hd"))
-              (a ((href "/")) 
-                 (h1 "lawnelephant")))
+              (a ((href "/"))
+                      (span ((id "text-logo")) "lawnelephant")))
          (div ((id "bd"))
-              ,(form '((body "" long-text))
-                        #:submit-label "Comment"
-                        #:init `((type . comment)
-                                 (author . ,(session-id sesh)))
-                        #:on-done (lambda (comment-rec)
-                                    (add-child-and-save! parent-item 'comments comment-rec)
-                                    (if redirect
-                                        (redirect-to redirect)
-                                        "comment saved."))))
-         (div ((id "ft"))
-              ,standard-footer))))
+              (div ((id "requests"))
+
+                  ,(form '((body "" long-text))
+                            #:submit-label "reply"
+                            #:init `((type . comment)
+                                     (author . ,(session-id sesh)))
+                            #:on-done (lambda (comment-rec)
+                                        (add-child-and-save! parent-item 'comments comment-rec)
+                                        (if redirect
+                                            (redirect-to redirect)
+                                            "comment saved.")))))
+         (div ((id "indexft")) 
+               (ul 
+                   ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
+                   ,(li-a "http://blog.lawnelephant.com" "blog")
+                   ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
+                   ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
+                   ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
+                   ;; XXX goog analytics really needs to be just before the closing body tag, but I
+                   ;; don't know how to put it there just yet
+                  ,(raw-str goog-analytics)))))
 
 (define (show-all-comments-view sesh parent-item
                                 #:threaded (threaded #f)

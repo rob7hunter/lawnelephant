@@ -15,12 +15,10 @@
          gen-show-list-view
          )
 
-
-
-(define (req-link sesh)
+(define (req-link sesh str)
   `(a ((href ,(body-as-url (req)
                            (post-feature-view sesh))))
-      "request a feature"))
+      ,str))
 
 (define (div-footer)
   `(div ((id "ft")) ,standard-footer))
@@ -28,14 +26,24 @@
 (define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
   (page
    #:design (base-design)
-   `(div ((id "doc"))
-         (div ((id "hd"))
-              (a ((href "/")) 
-                 (h1 "lawnelephant")))
-         (div ((id "bd index"))
+   `(div ((id "docindex"))
+         (div ((id "indexhd"))
+              (h1 "lawnelephant"))
+         (div ((id "bd"))
               (div ((id "elephant-holder"))
                    (img ((src "i/elephant.jpg")))))
-         ,(div-footer))))
+         (div ((id "indexft")) 
+              (ul
+                ,(li-a "/popular" "all"))
+               (ul 
+                   ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
+                   ,(li-a "http://blog.lawnelephant.com" "blog")
+                   ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
+                   ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
+                   ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
+                   ;; XXX goog analytics really needs to be just before the closing body tag, but I
+                   ;; don't know how to put it there just yet
+                  ,(raw-str goog-analytics)))))
               
 
 
@@ -44,46 +52,36 @@
    #:design (base-design)
    `(div ((id "doc"))
          (div ((id "hd"))
-              (a ((href "/")) 
-                 (h1 "lawnelephant")))
+              (a ((href "/"))
+                      (span ((id "text-logo")) "lawnelephant")))
          (div ((id "bd"))
               (div ((id "requests"))
                    ,(form-markup sesh)))
-         ,(div-footer))))
-
-(define (newcomments-page-view sesh #:form-view (form-markup request-feature-form-view))
-  (page
-   #:design (base-design #:title (format "~A | lawnelephant" "newest comments"))
-   `(div ((id "doc"))
-         (div ((id "hd"))
-              (a ((href "/")) 
-                 (h1 "lawnelephant")))
-         (div ((id "bd"))
-              (div ((id "commentary"))
-                   ,(web-link "request a feature"
-                             (body-as-url (req)
-                                          (post-feature-view sesh))))
-
-              )
-         (div ((id "ft")) ,standard-footer))))
+         (div ((id "indexft")) 
+               (ul 
+                   ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
+                   ,(li-a "http://blog.lawnelephant.com" "blog")
+                   ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
+                   ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
+                   ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
+                   ;; XXX goog analytics really needs to be just before the closing body tag, but I
+                   ;; don't know how to put it there just yet
+                  ,(raw-str goog-analytics)))))
 
 
-
-
-(define (list-page-view sesh title feat-pool #:form-view (form-markup request-feature-form-view))
+(define (list-page-view sesh title feat-pool)
   (page
    #:design (base-design #:title (format "~A | lawnelephant" title))
    `(div ((id "doc"))
          (div ((id "hd"))
-              (h1 (a ((href "/")) 
-                     (img ((src "i/miniphant.jpg")))))
-              (h2 ,(req-link sesh)))
+                   (a ((href "/"))
+                      (span ((id "text-logo")) "lawnelephant"))
+                   (div ((id "posta"))
+                        ,(req-link sesh "post")))
+              
          (div ((id "bd"))
-              ,(let ((tab-content
-                      (lambda (feat-fn)
-                        `(div (ul ,@(map (cut feature-req-view sesh <>)
-                                                  (feat-fn)))))))
-                 (tab-content feat-pool)))
+              (ul ,@(map (cut feature-req-view sesh <>)
+                         (feat-pool))))
          ,(div-footer))))
 
 (define (gen-show-list-view type-str sesh)
@@ -95,7 +93,7 @@
 
 (define (request-feature-form-view sesh)
   (form '((explanation "" long-text))
-        #:submit-label "Request a Feature"
+        #:submit-label "post"
         #:init `((type . feature-request)
                  (author. ,(session-id sesh)))
         #:error-wrapper (lambda (error-form-view)
@@ -144,6 +142,22 @@
        (make-ago-string "second" ago)))))
 
 (define (feature-req-view sesh feat)
+  `(li (span ((class "explanation"))
+             ,(if (equal? "missing" (feature-request-expl-no-markup feat))
+                (rec-prop feat 'body)
+                (feature-request-expl-no-markup feat)))
+       (span ((class "ago"))
+             ,(time-ago (rec-prop feat 'created-at)))
+       (span ((class "reply"))
+             ,(comment-on-item-link feat sesh #:redirect-to (page-url feature-detail-page (rec-id feat))))
+       ,(if (> (count-comments feat) 0)
+          `(ul ((class "indent")) ,@(map (λ(x) (feature-req-view sesh x))
+                      (get-comments feat)))
+          "")))
+
+
+
+(define (feature-req-viewa sesh feat)
   (let ((is-completed? (rec-prop feat 'completed)))
     `(li (span ((class "explanation"))
                ,(web-link (string-ellide (feature-request-expl-no-markup feat) 120)

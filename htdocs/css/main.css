@@ -1,7 +1,59 @@
-h1 h2  {
+#requests {
+    margin: 1em;
+    max-width: 30em;
+}
 
-    margin-top: 0.25em;
-    margin-bottom: .25em;
+
+.simple {
+    margin: 0em;
+}
+
+.ago {
+    margin-left: .5em;
+    margin-right: .0em;
+    color: #aaaaaa;
+}
+
+#indexhd {
+    text-align: center;
+}
+
+
+#text-logo {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.reply {
+    margin-left: .5em;
+}
+
+
+a, h1 {
+    color: #5e9e01;
+}
+
+#hd {
+    background: #5e9e01;
+    padding: .25em 1em;
+}
+
+#posta {
+    float: right;
+}
+
+.explanation {
+    font-family: Helvetica,sans-serif;
+    color: #333333;
+    font-size: 1em;
+}
+#doc, #docindex {
+    padding: 0em;
+    margin-top: 0em;
+}
+
+#docindex {
+    text-align: center;
 }
 
 img {
@@ -15,16 +67,9 @@ img {
 
 
 
-ul .thread {
-    margin-top: 1em;
-}
-    
 
 input {
     margin-top: 1em;
-}
-.comment {
-    font-size: 1.5em;
 }
 
 div > .reply-link {
@@ -32,40 +77,29 @@ div > .reply-link {
 }
 
 ul {
-    margin-left: 1em; 
+    margin-left: 1em;
+    padding: 0em;
 }
+
 ul li {
     list-style-type: none;
 }
 
 li {
+    margin-top: 1em;
     margin-bottom: 1em;
-}
-.thread {
-    margin: 0em;
-}
-
-h1 {
-    font-size: 2em;
-}
-
-.explanation {
-    font-size: 1.5em;
-}
-
-p {
-    font-size: 1.5em;
     margin-left: 0em;
-    margin-bottom: .0em;
-    margin-top: 0em;
+    max-width: 30em;
 }
+
+
 #header {
     margin: 1em;
     font-size: 1.5em;    
 }
 a {
     text-decoration: none;
-    color: #3e5e01;
+    //color: #3e5e01;
 }
 
 a:hover {
@@ -80,26 +114,13 @@ a:hover {
 
 
 body {
+    font-family: Helvetica; sans-serif;
+    margin: 0em;
 }
 
-form {
-    text-align: center;
-}
-
-#requests > form > label {
-
-    display: block;
-
-}
 
 #requests textarea {
-    font-size: 1.5em;
-}
-#requests > form > textarea {
-}
-
-#requests input {
-    margin: 1em;
+    font-size: 1em;
 }
 
 .text-input {
@@ -107,21 +128,26 @@ form {
     width: 100%;
 }
 
-.simple > li {
 
-    margin-right: 1em;
+
+#indexft  ul  li {
     display: inline;
-    font-size: 1.5em;
 }
 
+#indexft ul li a {
+    padding: 0em .5em;
+}
 
 #ft {
-    text-align: center;
-    margin-top: 2em;
+    padding: .25em .5em;
+    background: #5E9E01 none repeat scroll 0 0;
 }
 
-#hd {
-    text-align: center;
+#ft  ul  li {
+    display: inline;
 }
 
-
+#ft ul li a {
+    padding: 0em .5em;
+    color: white;
+}
