@@ -1,4 +1,4 @@
-(require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
+(require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
          "app.scm"
          "main.scm")
 
