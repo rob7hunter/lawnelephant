@@ -3,8 +3,8 @@
 ;; this is a generic dicussion engine.  we won't make it so generic to start, but
 ;; at least we'll try not to lock it down to be just about, say, feature request records.
 
-(require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
-         (planet "util.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
+(require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
+         (planet "util.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
          "templates.ss" ;;XXX shouldn't be here - need to abstract out at some point
          "data.ss"
          )

@@ -2,8 +2,8 @@
 
 ;; Note: the expectation is that this will be moved into the core of LeftParen.
 
-(require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 4 (= 1)))
-         (planet "util.scm" ("vegashacker" "leftparen.plt" 4 (= 1))))
+(require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
+         (planet "util.scm" ("vegashacker" "leftparen.plt" 5 (= 0))))
 
 (provide define*)
 
