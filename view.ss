@@ -12,6 +12,7 @@
 
 (provide index-page-view
          gen-show-list-view
+         ;feature-detail-page-view 
          )
 
 (define (req-link sesh str)
@@ -136,6 +137,12 @@
                 (feature-request-expl feat)))
        (span ((class "ago"))
              ,(time-ago (rec-prop feat 'created-at)))
+       (span ((class "voteinfo"))
+             " (")
+       (span ((class "pts")) 
+             ,(format "~A" (vote-score feat)))
+       (span ((class "voteinfo")) ")")
+
        (span ((class "reply"))
 
        ;;XXX redirect to a better place
@@ -151,6 +158,9 @@
 
        ,(xexpr-if (in-admin-mode?)
                   (delete-entry-view feat))
+
+       ,(xexpr-if (and (not (rec-prop feat 'completed)) (in-admin-mode?))
+                  (mark-as-completed-view feat))
 
        ;XXX doesn't look proper, shouldn't I be able to just (when (get-comments feat) ...)
        ,(if (> (count-comments feat) 0)

@@ -49,11 +49,12 @@
     margin: 0em;
 }
 
-.ago {
-    margin-left: .5em;
-    margin-right: .0em;
+.voteinfo, .ago, .pts {
+    margin: 0em;
     color: #aaaaaa;
 }
+
+.ago {margin-left: .5em;}
 
 #indexhd {
     text-align: center;

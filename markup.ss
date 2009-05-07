@@ -52,14 +52,17 @@
                                   URL_SUBDIR_REGEXP))
 
 ;; plucks out hastags from text. 
+;; under development
+
 (define TAG-REGEXP #px"((?<=^)|(?<=[[:blank:]]))#[A-Za-z0-9]+")
 
+(define (markup-tags str)
+    (regexp-replace-in-list* TAG-REGEXP str
+                             string-upcase))
 
 ;; handles newlines and URLs...
 (define (markup-body str)
-  (define (markup-tags str)
-    (regexp-replace-in-list* TAG-REGEXP str
-                             string-upcase))
+  
   (define (newline-replace str)
     (regexp-replace-in-list* "[\n\r][\n\r]|[\n\r]" str
                              (lambda (newline) '(br))))
