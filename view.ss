@@ -135,13 +135,6 @@
              ,(if (equal? "missing" (feature-request-expl-no-markup feat))
                 (rec-prop feat 'body)
                 (feature-request-expl feat)))
-       (span ((class "ago"))
-             ,(time-ago (rec-prop feat 'created-at)))
-       (span ((class "voteinfo"))
-             " (")
-       (span ((class "pts")) 
-             ,(format "~A" (vote-score feat)))
-       (span ((class "voteinfo")) ")")
 
        (span ((class "reply"))
 
@@ -161,6 +154,13 @@
 
        ,(xexpr-if (and (not (rec-prop feat 'completed)) (in-admin-mode?))
                   (mark-as-completed-view feat))
+       (span ((class "pts")) 
+             ,(format "~A" (vote-score feat)))
+
+       (span ((class "voteinfo"))
+             "points")
+       (span ((class "ago"))
+             ,(time-ago (rec-prop feat 'created-at)))
 
        ;XXX doesn't look proper, shouldn't I be able to just (when (get-comments feat) ...)
        ,(if (> (count-comments feat) 0)
