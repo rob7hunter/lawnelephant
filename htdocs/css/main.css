@@ -1,3 +1,44 @@
+#instructions {
+    margin-left: 1em;
+    max-width: 30em;
+}
+
+#signin {
+    float: right;
+    color: white;
+}
+
+
+#subhead {
+    background: #7EBE21;
+}
+.tab li {
+    margin-bottom: 0em;
+    margin-top: 0em;
+    margin-left: 0.50em;
+    margin-right: 0.0em;
+    padding-right: 0em;
+    padding-left: 0.5em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    display: inline;
+}
+
+
+.up {
+    margin-left: .5em;
+    margin-right: 0em;
+}
+.tab a {
+    color: white;
+}
+    
+.tab {
+    display: inline;
+    margin: 0em;
+}
+
+
 #requests {
     margin: 1em;
     max-width: 30em;
@@ -22,6 +63,9 @@
 #text-logo {
     color: #ffffff;
     font-weight: bold;
+    margin-left: 1em;
+    margin-right: 1em;
+    padding-top: 1em;
 }
 
 .reply {
@@ -35,11 +79,21 @@ a, h1 {
 
 #hd {
     background: #5e9e01;
-    padding: .25em 1em;
+    padding-top: .50em;
+    padding-bottom: .50em;
+    margin: 0em;
+    height: 1em;
+    vertical-align: bottom;
 }
 
 #posta {
+    padding-right: 1em;
     float: right;
+}
+
+#posta a {
+    color: white;
+    font-weight: bold;
 }
 
 .explanation {
@@ -106,13 +160,6 @@ a:hover {
     text-decoration: underline;
 }
 
-#welcome {
-    float: right;
-    position: absolute;
-    right: 0px;
-}
-
-
 body {
     font-family: Helvetica; sans-serif;
     margin: 0em;
@@ -136,6 +183,7 @@ body {
 
 #indexft ul li a {
     padding: 0em .5em;
+    padding-left: 0em;
 }
 
 #ft {

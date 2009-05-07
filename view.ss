@@ -11,7 +11,6 @@
          "admin.ss")
 
 (provide index-page-view
-         feature-detail-page-view
          gen-show-list-view
          )
 
@@ -23,7 +22,7 @@
 (define (div-footer)
   `(div ((id "ft")) ,standard-footer))
 
-(define (index-page-view sesh #:form-view (form-markup request-feature-form-view))
+(define (index-page-view sesh)
   (page
    #:design (base-design)
    `(div ((id "docindex"))
@@ -57,6 +56,8 @@
          (div ((id "bd"))
               (div ((id "requests"))
                    ,(form-markup sesh)))
+         (div ((id "instructions"))
+              "Make your post easier to find by adding tags. Just put a # before any word to turn it into a tag. For example #feature or #question.")
          (div ((id "indexft")) 
                (ul 
                    ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
@@ -74,11 +75,16 @@
    #:design (base-design #:title (format "~A | lawnelephant" title))
    `(div ((id "doc"))
          (div ((id "hd"))
+              (div ((id "Signin"))
+                        ,(req-link sesh "post"))    
                    (a ((href "/"))
-                      (span ((id "text-logo")) "lawnelephant"))
-                   (div ((id "posta"))
-                        ,(req-link sesh "post")))
-              
+                      (span ((id "text-logo")) "lawnelephant")))
+         (div ((id "subhead"))
+              (div ((id "posta"))
+                        ,(req-link sesh "post"))
+              (ul ((class "tab"))
+                  ,(li-a "/newest" "new")
+                  ,(li-a "/popular" "hot")))
          (div ((id "bd"))
               (ul ,@(map (cut feature-req-view sesh <>)
                          (feat-pool))))
@@ -100,26 +106,7 @@
                           (index-page-view sesh #:form-view
                                            (lambda (sesh) error-form-view)))
         #:validate feature-request-validator
-        #:on-done (lambda (feat)
-                    (redirect-to (page-url feature-detail-page (rec-id feat))))))
-
-(define (feature-detail-page-view sesh feat)
-  (let ((exp-raw (string-trim (rec-prop feat 'explanation)))
-        (exp (feature-request-expl feat)))
-    (page
-     #:design (base-design #:title (format "~A | lawnelephant" (string-ellide exp-raw 15)))
-     `(div ((id "doc"))
-           (div ((id "hd"))
-                (span ((id "header")) 
-                      ,(web-link "lawnelephant.com" (setting *WEB_APP_URL*))
-                      " > feature details"))
-           ,(let ((detail-url (page-url feature-detail-page (rec-id feat))))
-             `(div ((id "bd")) 
-                   (p ,exp)
-                   (p ((class "reply"))
-                         ,(comment-on-item-link feat sesh #:redirect-to detail-url))
-                   ,(show-all-comments-view sesh feat #:threaded #t #:redirect-to detail-url)))
-           ,(div-footer)))))
+        #:on-done (lambda (x) (redirect-to "/newest"))))
 
 
 (define (make-ago-string str num)
@@ -145,11 +132,26 @@
   `(li (span ((class "explanation"))
              ,(if (equal? "missing" (feature-request-expl-no-markup feat))
                 (rec-prop feat 'body)
-                (feature-request-expl-no-markup feat)))
+                (feature-request-expl feat)))
        (span ((class "ago"))
              ,(time-ago (rec-prop feat 'created-at)))
        (span ((class "reply"))
-             ,(comment-on-item-link feat sesh #:redirect-to (page-url feature-detail-page (rec-id feat))))
+
+       ;;XXX redirect to a better place
+             ,(comment-on-item-link feat sesh #:redirect-to "/newest")) 
+
+       ;;XXX need to make this toggleable
+       ;;XXX could use cleanup - e.g. "up"?
+
+       ,(xexpr-if (can-vote-on? sesh feat)
+                  `(a ((href ,(make-voter-url sesh feat "up"))
+                             (class "up"))
+                      ,(raw-str "&#9734;")))
+
+       ,(xexpr-if (in-admin-mode?)
+                  (delete-entry-view feat))
+
+       ;XXX doesn't look proper, shouldn't I be able to just (when (get-comments feat) ...)
        ,(if (> (count-comments feat) 0)
           `(ul ((class "indent")) ,@(map (λ(x) (feature-req-view sesh x))
                       (get-comments feat)))

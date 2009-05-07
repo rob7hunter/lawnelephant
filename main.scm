@@ -24,10 +24,6 @@
   #:blank #t
   (gen-show-list-view "completed" sesh))
 
-(define-session-page (feature-detail-page req sesh feat-id)
-  #:blank #t
-  (only-rec-of-type feat-id feature-request (f)
-                    (feature-detail-page-view sesh f)))
 
 (define-session-page (signin-page req sesh)
   (welcome-message sesh #:no-register #t))
