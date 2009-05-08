@@ -12,7 +12,7 @@
 
 (provide index-page-view
          gen-show-list-view
-         ;feature-detail-page-view 
+         feature-detail-page-view 
          )
 
 (define (req-link sesh str)
@@ -70,6 +70,25 @@
                    ;; don't know how to put it there just yet
                   ,(raw-str goog-analytics)))))
 
+(define (feature-detail-page-view sesh feat-id)
+  (page
+   #:design (base-design #:title "more | lawnelephant")
+   `(div ((id "doc"))
+         (div ((id "hd"))
+              (div ((id "Signin"))
+                        ,(req-link sesh "post"))    
+                   (a ((href "/"))
+                      (span ((id "text-logo")) "lawnelephant")))
+         (div ((id "subhead"))
+              (div ((id "posta"))
+                        ,(req-link sesh "post"))
+              (ul ((class "tab"))
+                  ,(li-a "/newest" "new")
+                  ,(li-a "/popular" "hot")
+                  ,(li-a "/completed" "completed")))
+         (div ((id "bd"))
+              (ul ,(feature-req-view sesh feat-id)))
+         ,(div-footer))))
 
 (define (list-page-view sesh title feat-pool)
   (page
@@ -139,10 +158,16 @@
        (span ((class "reply"))
 
        ;;XXX redirect to a better place
+
              ,(comment-on-item-link feat sesh #:redirect-to "/newest")) 
 
        ;;XXX need to make this toggleable
        ;;XXX could use cleanup - e.g. "up"?
+
+       ,(if (rec-type-is? feat  'feature-request)
+           `(span ((class "more"))
+                 ,(web-link "more" (format "/feature/~A" (rec-id feat))))
+           "")
 
        ,(xexpr-if (can-vote-on? sesh feat)
                   `(a ((href ,(make-voter-url sesh feat "up"))

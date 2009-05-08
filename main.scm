@@ -11,6 +11,11 @@
   (index-page-view sesh))
 
 
+(define-session-page (feature-detail-page req sesh feat-id)
+  #:blank #t
+  (only-rec-of-type feat-id feature-request (f)
+                    (feature-detail-page-view sesh f)))
+
 (define-session-page (popular-page req sesh)
   #:blank #t
   (gen-show-list-view "popular" sesh))
