@@ -97,8 +97,6 @@
    #:design (base-design #:title (format "~A | lawnelephant" title))
    `(div ((id "doc"))
          (div ((id "hd"))
-              (div ((id "Signin"))
-                   ,(req-link sesh "post"))    
               (a ((href "/"))
                  (span ((id "text-logo")) "lawnelephant")))
          (div ((id "subhead"))
