@@ -165,8 +165,14 @@
        ;;XXX could use cleanup - e.g. "up"?
 
        ,(if (rec-type-is? feat  'feature-request)
-           `(span ((class "more"))
-                 ,(web-link "more" (format "/feature/~A" (rec-id feat))))
+          `(span ((class "features-only"))
+               ,(xexpr-if (in-admin-mode?)
+                          (delete-entry-view feat))
+
+               ,(xexpr-if (and (not (rec-prop feat 'completed)) (in-admin-mode?))
+                          (mark-as-completed-view feat))
+               (span ((class "more"))
+                     ,(web-link "more" (format "/feature/~A" (rec-id feat)))))
            "")
 
        ,(xexpr-if (can-vote-on? sesh feat)
@@ -174,11 +180,6 @@
                              (class "up"))
                       ,(raw-str "&#9734;")))
 
-       ,(xexpr-if (in-admin-mode?)
-                  (delete-entry-view feat))
-
-       ,(xexpr-if (and (not (rec-prop feat 'completed)) (in-admin-mode?))
-                  (mark-as-completed-view feat))
        (span ((class "pts")) 
              ,(format "~A" (vote-score feat)))
 
