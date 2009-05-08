@@ -61,15 +61,16 @@
                              string-upcase))
 
 ;; handles newlines and URLs...
-(define (markup-body str)
+(define (markup-body stri)
   
-  (define (newline-replace str)
-    (regexp-replace-in-list* "[\n\r][\n\r]|[\n\r]" str
-                             (lambda (newline) '(br))))
-  (define (url-replace str)
-    (regexp-replace-in-list* URL_REGEXP str
-                             (lambda (url) (list (web-link url url)))
-                             newline-replace))
-  (let ((xexpr-lst (url-replace str)))
-    (apply ** (concatenate xexpr-lst))))
+  (let ((str (regexp-replace #px"[\n\r]*$" stri "")))
+      (define (newline-replace str)
+        (regexp-replace-in-list* "[\n\r][\n\r]|[\n\r]" str
+                                 (lambda (newline) '(br))))
+      (define (url-replace str)
+        (regexp-replace-in-list* URL_REGEXP str
+                                 (lambda (url) (list (web-link url url)))
+                                 newline-replace))
+      (let ((xexpr-lst (url-replace str)))
+        (apply ** (concatenate xexpr-lst)))))
 
