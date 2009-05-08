@@ -1,3 +1,7 @@
+.intro {
+    font-weight: bold;
+}
+
 #instructions {
     margin-left: 1em;
     max-width: 30em;
@@ -26,7 +30,7 @@
 
 
 .up {
-    margin: 0em .5em 0em .5em;
+    margin: 0em .5em 0em 0em;
 }
 .tab a {
     color: white;
@@ -69,7 +73,7 @@
 }
 
 .reply {
-    padding: 0em .5em 0em .5em;
+    margin: 0em .5em 0em .5em;
 }
 
 
@@ -143,7 +147,7 @@ li {
     margin-top: 1em;
     margin-bottom: 1em;
     margin-left: 0em;
-    max-width: 30em;
+    max-width: 40em;
 }
 
 

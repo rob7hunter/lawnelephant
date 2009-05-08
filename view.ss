@@ -31,10 +31,12 @@
               (h1 "lawnelephant"))
          (div ((id "bd"))
               (div ((id "elephant-holder"))
-                   (img ((src "i/elephant.jpg")))))
+                   (a ((href "/popular"))
+                      (img ((src "i/elephant.jpg"))))))
          (div ((id "indexft")) 
               (ul
-                ,(li-a "/popular" "all"))
+                (li ((class "intro"))
+                    (a ((href "/popular")) "browse all the posts on lawnelephant")))
                (ul 
                    ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
                    ,(li-a "http://blog.lawnelephant.com" "blog")
