@@ -196,42 +196,6 @@
                                            (get-comments feat)))
             "")))
 
-
-
-(define (feature-req-viewa sesh feat)
-  (let ((is-completed? (rec-prop feat 'completed)))
-    `(li (span ((class "explanation"))
-               ,(web-link (string-ellide (feature-request-expl-no-markup feat) 120)
-                          (page-url feature-detail-page (rec-id feat))))
-         (div ((class "explanation-rest"))
-              (span ((class "points")) 
-                    ,(format "~A" (vote-score feat)))
-              
-              " points posted "
-              ,(time-ago (rec-prop feat 'created-at))
-              " "
-              ,(xexpr-if is-completed?
-                         "completed ")
-              
-              ,(let ((it (count-comments feat)))
-                 (cond
-                   ((> it 1) (format "[~A comments] " it))
-                   ((< it 1) "")
-                   (else (format "[~A comment] " it))))
-              
-              ,(xexpr-if (and (not is-completed?) (can-vote-on? sesh feat))
-                         ;;XXX looks like a named let could work here
-                         (let ((votelink (lambda (dir)
-                                           `(a ((href ,(make-voter-url sesh feat dir))
-                                                (class ,dir))
-                                               ,(format "[vote ~A]" dir)))))
-                           (** " " (votelink "up") " " (votelink "down"))))
-              
-              ,(xexpr-if (in-admin-mode?)
-                         (delete-entry-view feat))
-              ,(xexpr-if (and (not is-completed?) (in-admin-mode?))
-                         (mark-as-completed-view feat))))))
-
 (define (delete-entry-view feat-req-rec)
   (** " "
       (web-link "[delete]" (body-as-url (req) (delete-rec! feat-req-rec) 
