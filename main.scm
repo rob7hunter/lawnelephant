@@ -11,10 +11,16 @@
   (index-page-view sesh))
 
 
-(define-session-page (feature-detail-page req sesh feat-id)
+;; This supports slugified urls.
+;; We take the parameter, and throw away everything after the 
+;; letters and the numbers at the start. So now we are free to
+;; construct slugified urls elsewhere in the product.
+
+(define-session-page (feature-detail-page req sesh feat-id-and-slug)
   #:blank #t
-  (only-rec-of-type feat-id feature-request (f)
-                    (feature-detail-page-view sesh f)))
+  (let ((feat-id (car (regexp-match #px"[a-z0-9]*" feat-id-and-slug))))
+       (only-rec-of-type feat-id feature-request (f)
+                         (feature-detail-page-view sesh f))))
 
 (define-session-page (popular-page req sesh)
   #:blank #t

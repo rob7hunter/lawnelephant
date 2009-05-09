@@ -34,15 +34,10 @@
 (define down-vote! (make-gen-voter 'down-votes))
 
 (define (vote-score feat)
-  (- 
-    (+ 1 (length (rec-child-prop feat 'votes)))
-    (length (rec-child-prop feat 'down-votes))))
+  (+ 1 (length (rec-child-prop feat 'votes))))
 
 (define (reddit-score feat)
-  (/ (+ 1 (length (rec-child-prop feat 'votes)))
+  (/ (vote-score feat) 
      (expt (- (current-seconds) (rec-prop feat 'created-at))
            .5)))
-
-
-
 
