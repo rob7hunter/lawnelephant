@@ -20,7 +20,7 @@
 
 (define (get-feature-requests-popular)
   (get-feature-requests-generic #:restricted-to (lambda (x) (not (completed? x)))
-                                #:sort-by vote-score))
+                                #:sort-by reddit-score))
 
 (define (get-feature-requests-newest)
   (get-feature-requests-generic #:restricted-to (lambda (x) (not (completed? x)))))

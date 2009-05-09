@@ -7,6 +7,7 @@
 (provide can-vote-on?
          make-voter-url
          vote-score
+         reddit-score
          )
 
 ;; voting
@@ -36,6 +37,11 @@
   (- 
     (+ 1 (length (rec-child-prop feat 'votes)))
     (length (rec-child-prop feat 'down-votes))))
+
+(define (reddit-score feat)
+  (/ (+ 1 (length (rec-child-prop feat 'votes)))
+     (expt (- (current-seconds) (rec-prop feat 'created-at))
+           .5)))
 
 
 
