@@ -14,13 +14,10 @@
 
 ;;XXX DRY alert
 (define (can-vote-on? sesh feat)
-  (not (or (member (session-id sesh) (rec-child-prop feat 'votes))
-           (member (session-id sesh) (rec-child-prop feat 'down-votes)))))
+  (not (member (session-id sesh) (rec-child-prop feat 'votes))))
 
 (define (make-voter-url sesh feat direction)
-  (let ((vote-fn (if (string=? "up" direction) 
-                   up-vote! 
-                   down-vote!)))
+  (let ((vote-fn up-vote!))
     (body-as-url (req)
                  (vote-fn sesh feat)
                  (redirect-to (page-url index-page)))))
@@ -31,7 +28,6 @@
     (store-rec! feat)))
 
 (define up-vote! (make-gen-voter 'votes))
-(define down-vote! (make-gen-voter 'down-votes))
 
 (define (vote-score feat)
   (+ 1 (length (rec-child-prop feat 'votes))))
