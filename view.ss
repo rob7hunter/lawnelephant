@@ -23,6 +23,20 @@
 (define (div-footer)
   `(div ((id "ft")) ,standard-footer))
 
+(define (slugify xs)
+  (cond
+    ((null? xs) "")
+    (else
+      (string-append (car xs) "-" (slugify (cdr xs))))))
+
+(define (gen-feature-link feat)
+  (format "/feature/~A~A~A"
+          (rec-id feat)
+          "-"
+          (car (regexp-match #px".{,90}[[:alnum:]]" 
+                             (slugify 
+                               (regexp-split #px"[^[:alnum:]]+" 
+                                             (rec-prop feat 'explanation)))))))
 (define (index-page-view sesh)
   (page
    #:design (base-design)
@@ -172,7 +186,7 @@
                    ,(xexpr-if (and (not (rec-prop feat 'completed)) (in-admin-mode?))
                               (mark-as-completed-view feat))
                    (span ((class "more"))
-                         ,(web-link "more" (format "/feature/~A" (rec-id feat)))))
+                         ,(web-link "more" (gen-feature-link feat))))
             "")
        
        ,(xexpr-if (can-vote-on? sesh feat)
