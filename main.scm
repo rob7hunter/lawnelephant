@@ -42,6 +42,10 @@
   #:blank #t
   (admin-mode (gen-show-list-view page-type-str sesh)))
 
+(define-session-page (tag-page req sesh tag)
+  #:blank #t
+  (gen-tag-page sesh tag))
+
 ;; caches
 
 (define-type-cache feature-request)

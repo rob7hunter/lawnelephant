@@ -13,6 +13,7 @@
 (provide index-page-view
          gen-show-list-view
          feature-detail-page-view 
+         gen-tag-page
          )
 
 (define (req-link sesh str)
@@ -37,6 +38,9 @@
                              (slugify 
                                (regexp-split #px"[^[:alnum:]]+" 
                                              (rec-prop feat 'explanation)))))))
+
+
+
 (define (index-page-view sesh)
   (page
    #:design (base-design)
@@ -105,6 +109,26 @@
          (div ((id "bd"))
               (ul ,(feature-req-view sesh feat-id)))
          ,(div-footer))))
+
+
+(define (gen-tag-page sesh tag)
+  (page
+   #:design (base-design #:title "achieve tags here")
+   `(div ((id "doc"))
+         (div ((id "hd"))
+              (a ((href "/"))
+                 (span ((id "text-logo")) "lawnelephant")))
+         (div ((id "subhead"))
+              (div ((id "posta"))
+                   ,(req-link sesh "post"))
+              (ul ((class "tab"))
+                  ,(li-a "/newest" "new")
+                  ,(li-a "/popular" "hot")
+                  ,(li-a "/completed" "completed")))
+         (div ((id "bd"))
+              ,(format "You said the tag was ~A." tag))
+         ,(div-footer))))
+
 
 (define (list-page-view sesh title feat-pool)
   (page

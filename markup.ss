@@ -56,14 +56,20 @@
 
 (define TAG-REGEXP #px"((?<=^)|(?<=[[:blank:]]))#[A-Za-z0-9]+")
 
-(define (markup-tags str)
-  (regexp-replace-in-list* TAG-REGEXP str
-                           string-upcase))
+(define (tag-to-link str discard)
+  (format "<a href=\"/tag/~A\">~A</a>" 
+          (car (regexp-match "(?<=.).*" str)) 
+          str))
+
+(define (tagify str)
+  (pregexp-replace* TAG-REGEXP str tag-to-link))
+
+
 
 ;; handles newlines and URLs...
 (define (markup-body stri)
   
-  (let ((str (regexp-replace #px"[\n\r]*$" stri "")))
+  (let ((str (tagify (regexp-replace #px"[\n\r]*$" stri ""))))
     (define (newline-replace str)
       (regexp-replace-in-list* "[\n\r][\n\r]|[\n\r]" str
                                (lambda (newline) '(br))))

@@ -10,6 +10,7 @@
   (feature-detail-page (url "/feature/" (string-arg)))
   (signin-page (url "/signin"))
   (adminified-index-page (url "/admin/" (string-arg)))
+  (tag-page (url "/tag/" (string-arg)))
   )
 
   

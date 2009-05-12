@@ -5,13 +5,11 @@
 
 (require (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
          (planet "util.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
-         "templates.ss" ;;XXX shouldn't be here - need to abstract out at some point
+         "templates.ss" ;XXX shouldn't be here - need to abstract out at some point
          "data.ss"
          )
 
 (provide comment-on-item-link
-         show-all-comments-view
-         show-comment-view
          get-comments
          count-comments
          )
@@ -22,7 +20,6 @@
   (web-link prose (body-as-url (req)
                                (create-comment-view item sesh #:redirect-to redirect))))
 
-
 (define (create-comment-view parent-item sesh #:redirect-to (redirect #f))
   (page
    #:design (base-design)
@@ -32,7 +29,6 @@
                       (span ((id "text-logo")) "lawnelephant")))
          (div ((id "bd"))
               (div ((id "requests"))
-
                   ,(form '((body "" long-text))
                             #:submit-label "reply"
                             #:init `((type . comment)
@@ -52,37 +48,6 @@
                    ;; XXX goog analytics really needs to be just before the closing body tag, but I
                    ;; don't know how to put it there just yet
                   ,(raw-str goog-analytics)))))
-
-(define (show-all-comments-view sesh parent-item
-                                #:threaded (threaded #f)
-                                #:redirect-to (redirect #f))
-  `(ul ((class "thread")) ,@(map (lambda (com) `(li ,(show-comment-view sesh com
-                                                     #:threaded threaded
-                                                     #:reply-link #t
-                                                     #:redirect-to redirect)))
-              (get-comments parent-item))))
-
-(define (show-comment-view sesh
-                           comment
-                           #:threaded (threaded #f)
-                           #:reply-link (reply-link #f)
-                           #:redirect-to (redirect #f))
-  (define (show-indiv-comment c sesh)
-    `(div ((class "comment"))
-          ,(any-body-markup (rec-prop c 'body))
-          ,@(splice-if reply-link `(div ((class "reply-link"))
-                                        ,(comment-on-item-link c
-                                                               sesh
-                                                               #:link-prose "reply"
-                                                               #:redirect-to redirect)))))
-  (if (not threaded)
-      (show-indiv-comment comment sesh)
-      ;; o/w we need to do some snazzy recursion...
-      (let lp ((cur comment))
-        `(div ((class "thread"))
-              ,(show-indiv-comment cur sesh)
-              (ul ,@(map (lambda (reply) `(li ,(lp reply)))
-                         (get-comments cur)))))))
 
 (define (count-comments feat-or-reply)
   (let ((comments (get-comments feat-or-reply)))
