@@ -42,27 +42,33 @@
 
 (define (index-page-view sesh)
   (page
-   #:design (base-design)
-   `(div ((id "docindex"))
-         (div ((id "indexhd"))
-              (h1 "lawnelephant"))
-         (div ((id "bd"))
-              (div ((id "elephant-holder"))
-                   (a ((href "/popular"))
-                      (img ((src "i/elephant.jpg"))))))
-         (div ((id "indexft")) 
-              (ul
-               (li ((class "intro"))
-                   (a ((href "/popular")) "browse all the posts on lawnelephant")))
-              (ul 
-               ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
-               ,(li-a "http://blog.lawnelephant.com" "blog")
-               ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
-               ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
-               ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
-              ;; XXX goog analytics really needs to be just before the closing body tag, but I
-              ;; don't know how to put it there just yet
-              ,(raw-str goog-analytics)))))
+    #:design (base-design)
+    `(div ((id "docindex"))
+          (div ((id "indexhd"))
+               (h1 "lawnelephant"))
+          (div ((id "bd"))
+               (div ((id "elephant-holder"))
+                    (a ((href "/popular"))
+                       (img ((src "i/elephant.jpg"))))))
+          (div ((id "indexft")) 
+
+               (div ((class "intro something"))
+                    "Anyone can request a feature or make a post. We'll add features based on what's requested. The only rule is that we can only make features that other people request.")
+               (ul
+
+
+                 (li ((class "intro"))
+
+                     (a ((href "/popular")) "browse all the posts on lawnelephant")))
+               (ul 
+                 ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
+                 ,(li-a "http://blog.lawnelephant.com" "blog")
+                 ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
+                 ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
+                 ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
+               ;; XXX goog analytics really needs to be just before the closing body tag, but I
+               ;; don't know how to put it there just yet
+               ,(raw-str goog-analytics)))))
 
 
 
