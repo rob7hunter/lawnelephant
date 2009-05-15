@@ -49,7 +49,8 @@
           (div ((id "bd"))
                (div ((id "elephant-holder"))
                     (a ((href "/popular"))
-                       (img ((src "i/elephant.jpg"))))))
+                       (img ((src "i/elephant.jpg")
+                             (alt "The logo for lawnelephant. It looks like a green elephant."))))))
           (div ((id "indexft")) 
 
                (div ((class "intro something"))
