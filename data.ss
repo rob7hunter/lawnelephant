@@ -4,11 +4,13 @@
          (planet "util.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
          "social.ss"
          "markup.ss"
+         "tags.ss"
          )
 
 (provide get-feature-requests-popular
          get-feature-requests-newest
          get-feature-requests-completed
+         get-feature-requests-by-tags
          feature-request-expl
          any-body-markup
          feature-request-expl-no-markup
@@ -24,6 +26,11 @@
 
 (define (get-feature-requests-newest)
   (get-feature-requests-generic #:restricted-to (lambda (x) (not (completed? x)))))
+
+
+(define (get-feature-requests-by-tags tag)
+  (get-feature-requests-generic #:restricted-to (lambda (feat) 
+                                                  (has-tag? feat tag))))
 
 (define (get-feature-requests-generic #:restricted-to (filter-fn #f)
                                       #:sort-by (sort-by 'created-at))

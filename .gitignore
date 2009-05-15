@@ -1,4 +1,6 @@
 data/*
 *.swp
 *.swo
-
+.DS_Store
+*.*~
+*.*.swn
