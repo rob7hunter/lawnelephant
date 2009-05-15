@@ -77,7 +77,10 @@
               (div ((id "requests"))
                    ,(form-markup sesh)))
          (div ((id "instructions"))
-              "Make your post easier to find by adding tags. Just put a # before any word to turn it into a tag. For example #feature or #question.")
+              "Make your post easier to find by adding tags. Just put a # before any word to turn it into a tag. For example "
+              ,(web-link "#feature" "/tag/feature")
+              " or "
+              ,(web-link "#question" "/tag/question"))
          (div ((id "indexft")) 
               (ul 
                ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
