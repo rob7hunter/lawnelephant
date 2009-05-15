@@ -15,7 +15,7 @@
 
 (define (base-design #:title (title "lawnelephant"))
   (design
-    #:raw-header '("<link rel=\"shortcut icon\" href=\"/favicon.ico\">")
+    #:raw-header '("<link rel=\"icon\" href=\"/favicon.png\">")
    #:js '("http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js"
           "scripts/init.js")
   ; #:css '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css&2.6.0/build/base/base-min.css&2.6.0/build/tabview/assets/skins/sam/tabview.css"

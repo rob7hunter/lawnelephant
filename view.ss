@@ -40,7 +40,6 @@
                                              (rec-prop feat 'explanation)))))))
 
 
-
 (define (index-page-view sesh)
   (page
    #:design (base-design)
@@ -92,62 +91,60 @@
 
 (define (feature-detail-page-view sesh feat-id)
   (page
-   #:design (base-design #:title "more | lawnelephant")
-   `(div ((id "doc"))
-         (div ((id "hd"))
-              (div ((id "Signin"))
-                   ,(req-link sesh "post"))    
-              (a ((href "/"))
-                 (span ((id "text-logo")) "lawnelephant")))
-         (div ((id "subhead"))
-              (div ((id "posta"))
-                   ,(req-link sesh "post"))
-              (ul ((class "tab"))
-                  ,(li-a "/newest" "new")
-                  ,(li-a "/popular" "hot")
-                  ,(li-a "/completed" "completed")))
-         (div ((id "bd"))
-              (ul ,(feature-req-view sesh feat-id)))
-         ,(div-footer))))
+    #:design (base-design #:title "more | lawnelephant")
+    `(div ((id "doc"))
+          (div ((id "hd"))
+               (div ((id "Signin"))
+                    ,(req-link sesh "post"))    
+               (a ((href "/"))
+                  (span ((id "text-logo")) "lawnelephant")))
+          (div ((id "subhead"))
+               (div ((id "posta"))
+                    ,(req-link sesh "post"))
+               (ul ((class "tab"))
+                   ,(li-a "/newest" "new")
+                   ,(li-a "/popular" "hot")
+                   ,(li-a "/completed" "completed")))
+          (div ((id "bd"))
+               (ul ,(feature-req-view sesh feat-id)))
+          ,(div-footer))))
 
+(define (hd-div)
+  `(div ((id "hd"))
+        (a ((href "/"))
+           (span ((id "text-logo")) "lawnelephant"))))
+
+(define (subhead-div sesh)
+  `(div ((id "subhead"))
+        (div ((id "posta"))
+             ,(req-link sesh "post"))
+        (ul ((class "tab"))
+            ,(li-a "/newest" "new")
+            ,(li-a "/popular" "hot")
+            ,(li-a "/completed" "completed"))))
 
 (define (gen-tag-page sesh tag)
   (page
-   #:design (base-design #:title "achieve tags here")
-   `(div ((id "doc"))
-         (div ((id "hd"))
-              (a ((href "/"))
-                 (span ((id "text-logo")) "lawnelephant")))
-         (div ((id "subhead"))
-              (div ((id "posta"))
-                   ,(req-link sesh "post"))
-              (ul ((class "tab"))
-                  ,(li-a "/newest" "new")
-                  ,(li-a "/popular" "hot")
-                  ,(li-a "/completed" "completed")))
-         (div ((id "bd"))
-              ,(format "You said the tag was ~A." tag))
-         ,(div-footer))))
+    #:design (base-design #:title (format "~A at lawnelephant" tag))
+    `(div ((id "doc"))
+          ,(hd-div)
+          ,(subhead-div sesh)
+          (div ((id "bd"))
+               (ul ,@(map (cut feature-req-view sesh <>)
+                          (get-feature-requests-by-tags tag))))
+          ,(div-footer))))
 
 
 (define (list-page-view sesh title feat-pool)
   (page
-   #:design (base-design #:title (format "~A | lawnelephant" title))
-   `(div ((id "doc"))
-         (div ((id "hd"))
-              (a ((href "/"))
-                 (span ((id "text-logo")) "lawnelephant")))
-         (div ((id "subhead"))
-              (div ((id "posta"))
-                   ,(req-link sesh "post"))
-              (ul ((class "tab"))
-                  ,(li-a "/newest" "new")
-                  ,(li-a "/popular" "hot")
-                  ,(li-a "/completed" "completed")))
-         (div ((id "bd"))
-              (ul ,@(map (cut feature-req-view sesh <>)
-                         (feat-pool))))
-         ,(div-footer))))
+    #:design (base-design #:title (format "~A | lawnelephant" title))
+    `(div ((id "doc"))
+          ,(hd-div)
+          ,(subhead-div sesh)
+          (div ((id "bd"))
+               (ul ,@(map (cut feature-req-view sesh <>)
+                          (feat-pool))))
+          ,(div-footer))))
 
 (define (gen-show-list-view type-str sesh)
   (list-page-view sesh type-str
@@ -172,8 +169,8 @@
   (format "~A ~A ago" 
           num 
           (if (eqv? 1 num) 
-              (format "~A" str)
-              (format "~As" str))))
+            (format "~A" str)
+            (format "~As" str))))
 
 (define (time-ago created)
   (let ((ago (- (current-seconds) created)))
@@ -185,52 +182,44 @@
       ((> ago 60) 
        (make-ago-string "minute" (round (/ ago 60))))
       (else 
-       (make-ago-string "second" ago)))))
+        (make-ago-string "second" ago)))))
 
 (define (feature-req-view sesh feat)
   `(li (span ((class "explanation"))
              ,(if (equal? "missing" (feature-request-expl-no-markup feat))
-                  (rec-prop feat 'body)
-                  (feature-request-expl feat)))
-       
-       (span ((class "reply"))
-             
-             ;;XXX redirect to a better place
-             
+                (rec-prop feat 'body)
+                (feature-request-expl feat)))
+
+       (span ((class "reply")) ; XXX needs to redirect to a better place
              ,(comment-on-item-link feat sesh #:redirect-to "/newest")) 
-       
-       ;;XXX need to make this toggleable
-       ;;XXX could use cleanup - e.g. "up"?
-       
-       ,(if (rec-type-is? feat  'feature-request)
-            `(span ((class "features-only"))
-                   ,(xexpr-if (in-admin-mode?)
-                              (delete-entry-view feat))
-                   
-                   ,(xexpr-if (and (not (rec-prop feat 'completed)) (in-admin-mode?))
-                              (mark-as-completed-view feat))
-                   (span ((class "more"))
-                         ,(web-link "more" (gen-feature-link feat))))
-            "")
-       
+
+       ,(xexpr-if (rec-type-is? feat 'feature-request)
+          `(span ((class "features-only"))
+                 ,(xexpr-if (in-admin-mode?)
+                            (delete-entry-view feat))
+
+                 ,(xexpr-if (and (not (rec-prop feat 'completed)) 
+                                 (in-admin-mode?))
+                            (mark-as-completed-view feat))
+                 (span ((class "more"))
+                       ,(web-link "link" (gen-feature-link feat)))))
        ,(xexpr-if (can-vote-on? sesh feat)
                   `(a ((href ,(make-voter-url sesh feat "up"))
                        (class "up"))
                       ,(raw-str "&#9734;")))
-       
+
        (span ((class "pts")) 
              ,(format "~A" (vote-score feat)))
-       
+
        (span ((class "voteinfo"))
              "points")
        (span ((class "ago"))
              ,(time-ago (rec-prop feat 'created-at)))
-       
+
        ;XXX doesn't look proper, shouldn't I be able to just (when (get-comments feat) ...)
-       ,(if (> (count-comments feat) 0)
-            `(ul ((class "indent")) ,@(map (λ(x) (feature-req-view sesh x))
-                                           (get-comments feat)))
-            "")))
+       ,(xexpr-if (> (count-comments feat) 0)
+          `(ul ((class "indent")) ,@(map (λ(x) (feature-req-view sesh x))
+                                         (get-comments feat))))))
 
 (define (delete-entry-view feat-req-rec)
   (** " "
@@ -239,9 +228,10 @@
 
 (define (mark-as-completed-view feat-req-rec)
   (** " "
-      (web-link "[mark completed]" (body-as-url (req)
-                                                (rec-set-prop! feat-req-rec 'completed #t)
-                                                (store-rec! feat-req-rec)
-                                                (redirect-to (page-url index-page))))))
+      (web-link "[mark completed]" 
+                (body-as-url (req)
+                             (rec-set-prop! feat-req-rec 'completed #t)
+                             (store-rec! feat-req-rec)
+                             (redirect-to (page-url index-page))))))
 
 

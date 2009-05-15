@@ -2,6 +2,7 @@
 
 (require (planet "util.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
          (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
+         "tags.ss"
          )
 
 (provide markup-body
@@ -51,32 +52,43 @@
                                   URL_OPTIONAL_PORT_REGEXP
                                   URL_SUBDIR_REGEXP))
 
-;; plucks out hastags from text. 
-;; under development
 
-(define TAG-REGEXP #px"((?<=^)|(?<=[[:blank:]]))#[A-Za-z0-9]+")
+;; handles newlines, tags and URLs...
 
-(define (tag-to-link str discard)
-  (format "<a href=\"/tag/~A\">~A</a>" 
-          (car (regexp-match "(?<=.).*" str)) 
-          str))
-
-(define (tagify str)
-  (pregexp-replace* TAG-REGEXP str tag-to-link))
-
-
-
-;; handles newlines and URLs...
 (define (markup-body stri)
-  
-  (let ((str (tagify (regexp-replace #px"[\n\r]*$" stri ""))))
-    (define (newline-replace str)
-      (regexp-replace-in-list* "[\n\r][\n\r]|[\n\r]" str
-                               (lambda (newline) '(br))))
-    (define (url-replace str)
-      (regexp-replace-in-list* URL_REGEXP str
-                               (lambda (url) (list (web-link url url)))
-                               newline-replace))
-    (let ((xexpr-lst (url-replace str)))
-      (apply ** (concatenate xexpr-lst)))))
+  (let ((str (regexp-replace #px"[\n\r]*$" stri "")))
+
+    (define NEWLINE_REGEXP "[\n\r][\n\r]|[\n\r]")
+
+    (define (tag-subst tag-str)
+      (web-link tag-str
+                (format "/tag/~A" (second (regexp-match "#(.+)" tag-str)))))
+
+    (define (newline-subst newline-str)
+      `(br))
+
+    (define (url-subst url)
+      (web-link url url))
+
+    (define (urlify str)
+      (apply ** (regexp-replace-in-list* URL_REGEXP
+                                         str
+                                         url-subst
+                                         )))
+
+    (define (newlineify str) 
+      (apply ** (regexp-replace-in-list* NEWLINE_REGEXP 
+                                         str 
+                                         newline-subst
+                                         urlify
+                                         )))
+
+    (define (tagify str) 
+      (apply ** (regexp-replace-in-list* TAG_REGEXP ; via tag.ss 
+                                         str 
+                                         tag-subst  ; do this to matches
+                                         newlineify ; do this to non-matches
+                                         )))
+    (tagify str)))
+
 
