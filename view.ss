@@ -8,6 +8,8 @@
          "social.ss"
          "discuss.ss"
          "templates.ss"
+         "markup.ss"
+         "tags.ss"
          "admin.ss")
 
 (provide index-page-view
@@ -54,22 +56,26 @@
                              (alt "The logo for lawnelephant. It looks like a green elephant."))))))
           (div ((id "indexft")) 
 
+               (div ((id "tagcloud"))
+                    (ul ,@(map (lambda (t)
+                                 `(li ,(tag-subst t)))
+                               (gen-tag-list))))
+                    
                (div ((class "intro something"))
-                    "Anyone can request a feature or make a post. 
-                    We'll add features based on what's requested. 
-                    The only rule is that we can only make features that other people request.")
+                    "Anyone can request a feature or make a post.  We'll add features based on what's requested.  The only rule is that we can only make features that other people request.")
 
-                (div ((class "intro")) 
-                     (a ((href "/popular")) "browse all the posts on lawnelephant"))
-                (ul 
-                  ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
-                  ,(li-a "http://blog.lawnelephant.com" "blog")
-                  ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
-                  ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
-                  ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
-                ;; XXX goog analytics really needs to be just before the closing body tag, but I
-                ;; don't know how to put it there just yet
-                ,(raw-str goog-analytics)))))
+
+               (div ((class "intro")) 
+                    (a ((href "/popular")) "browse all the posts on lawnelephant"))
+               (ul 
+                 ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
+                 ,(li-a "http://blog.lawnelephant.com" "blog")
+                 ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
+                 ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
+                 ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
+               ;; XXX goog analytics really needs to be just before the closing body tag, but I
+               ;; don't know how to put it there just yet
+               ,(raw-str goog-analytics)))))
 
 
 

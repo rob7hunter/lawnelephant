@@ -11,6 +11,7 @@
          get-feature-requests-newest
          get-feature-requests-completed
          get-feature-requests-by-tags
+         get-feature-requests-generic 
          feature-request-expl
          any-body-markup
          feature-request-expl-no-markup

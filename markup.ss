@@ -6,6 +6,7 @@
          )
 
 (provide markup-body
+         tag-subst 
          )
 
 ;; This URL finding code to eventually go in LeftParen...
@@ -52,17 +53,15 @@
                                   URL_OPTIONAL_PORT_REGEXP
                                   URL_SUBDIR_REGEXP))
 
-
+(define (tag-subst tag-str)
+  (web-link tag-str
+            (format "/tag/~A" (second (regexp-match "#(.+)" tag-str)))))
 ;; handles newlines, tags and URLs...
 
 (define (markup-body stri)
   (let ((str (regexp-replace #px"[\n\r]*$" stri "")))
 
     (define NEWLINE_REGEXP "[\n\r][\n\r]|[\n\r]")
-
-    (define (tag-subst tag-str)
-      (web-link tag-str
-                (format "/tag/~A" (second (regexp-match "#(.+)" tag-str)))))
 
     (define (newline-subst newline-str)
       `(br))
