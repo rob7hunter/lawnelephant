@@ -57,8 +57,8 @@
           (div ((id "indexft")) 
 
                (div ((id "tagcloud"))
-                    (ul ,@(map (lambda (t)
-                                 `(li ,(tag-subst t)))
+                    (span ,@(map (lambda (t)
+                                 `(span ,(tag-subst t) " "))
                                (gen-tag-list))))
                     
                (div ((class "intro something"))
