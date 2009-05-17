@@ -21,8 +21,11 @@
                            (post-feature-view sesh))))
       ,str))
 
+(define (div-id id rest)
+  `(div ((id ,id)) ,rest))
+
 (define (div-footer)
-  `(div ((id "ft")) ,standard-footer))
+  (div-id "ft" standard-footer))
 
 (define (slugify xs)
   (cond
@@ -39,13 +42,11 @@
                                (regexp-split #px"[^[:alnum:]]+" 
                                              (rec-prop feat 'explanation)))))))
 
-
 (define (index-page-view sesh)
   (page
     #:design (base-design)
     `(div ((id "docindex"))
-          (div ((id "indexhd"))
-               (h1 "lawnelephant"))
+          (h1 "lawnelephant")
           (div ((id "bd"))
                (div ((id "elephant-holder"))
                     (a ((href "/popular"))
@@ -54,22 +55,21 @@
           (div ((id "indexft")) 
 
                (div ((class "intro something"))
-                    "Anyone can request a feature or make a post. We'll add features based on what's requested. The only rule is that we can only make features that other people request.")
-               (ul
+                    "Anyone can request a feature or make a post. 
+                    We'll add features based on what's requested. 
+                    The only rule is that we can only make features that other people request.")
 
-
-                 (li ((class "intro"))
-
-                     (a ((href "/popular")) "browse all the posts on lawnelephant")))
-               (ul 
-                 ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
-                 ,(li-a "http://blog.lawnelephant.com" "blog")
-                 ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
-                 ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
-                 ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
-               ;; XXX goog analytics really needs to be just before the closing body tag, but I
-               ;; don't know how to put it there just yet
-               ,(raw-str goog-analytics)))))
+                (div ((class "intro")) 
+                     (a ((href "/popular")) "browse all the posts on lawnelephant"))
+                (ul 
+                  ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
+                  ,(li-a "http://blog.lawnelephant.com" "blog")
+                  ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
+                  ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
+                  ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
+                ;; XXX goog analytics really needs to be just before the closing body tag, but I
+                ;; don't know how to put it there just yet
+                ,(raw-str goog-analytics)))))
 
 
 
@@ -134,17 +134,19 @@
             ,(li-a "/completed" "completed"))))
 
 (define (gen-tag-page sesh tag)
-  (page
-    #:design (base-design #:title (format "~A at lawnelephant" tag))
-    `(div ((id "doc"))
-          ,(hd-div)
-          ,(subhead-div sesh)
-          (div ((id "bd"))
-               (ul ,@(map (cut feature-req-view sesh <>)
-                          (get-feature-requests-by-tags tag))))
-          ,(div-footer))))
+  (let ((tags (regexp-split #px"[^[:alnum:]]" tag)))
+    (page
+      #:design (base-design #:title (format "~A at lawnelephant" tag))
+      `(div ((id "doc"))
+            ,(hd-div)
+            ,(subhead-div sesh)
+            (div ((id "bd"))
+                 (ul ,@(map (cut feature-req-view sesh <>)
+                            (get-feature-requests-by-tags tags))))
+            ,(div-footer)))))
 
 
+;; once gen-tag-page gets built out this won't be needed anymore
 (define (list-page-view sesh title feat-pool)
   (page
     #:design (base-design #:title (format "~A | lawnelephant" title))
@@ -156,6 +158,7 @@
                           (feat-pool))))
           ,(div-footer))))
 
+;; once gen-tag-page gets built out this won't be needed anymore
 (define (gen-show-list-view type-str sesh)
   (list-page-view sesh type-str
                   (cond ((string=? type-str "popular") get-feature-requests-popular)

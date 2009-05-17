@@ -27,10 +27,9 @@
 (define (get-feature-requests-newest)
   (get-feature-requests-generic #:restricted-to (lambda (x) (not (completed? x)))))
 
-
 (define (get-feature-requests-by-tags tag)
   (get-feature-requests-generic #:restricted-to (lambda (feat) 
-                                                  (has-tag? feat tag))))
+                                                  (has-all-tags? feat tag))))
 
 (define (get-feature-requests-generic #:restricted-to (filter-fn #f)
                                       #:sort-by (sort-by 'created-at))
