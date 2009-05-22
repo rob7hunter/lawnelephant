@@ -36,8 +36,8 @@
     ((has-tag? feat (car tags)) (has-all-tags? feat (cdr tags)))
     (else #f)))
 
-(define (gen-tag-list)
-  (sort (apply lset-union string=? (map extract-tags (get-feature-requests-generic)))
+(define (gen-tag-list post-pool)
+  (sort (apply lset-union string=? (map extract-tags post-pool))
         string<?))
 
 

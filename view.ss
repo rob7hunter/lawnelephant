@@ -39,10 +39,11 @@
   (format "/feature/~A~A~A"
           (rec-id feat)
           "-"
-          (car (regexp-match #px".{,90}[[:alnum:]]" 
-                             (slugify 
-                               (regexp-split #px"[^[:alnum:]]+" 
-                                             (rec-prop feat 'explanation)))))))
+          (car (regexp-match 
+                 #px".{,90}[[:alnum:]]" 
+                 (slugify 
+                   (regexp-split #px"[^[:alnum:]]+" 
+                                 (rec-prop feat 'explanation)))))))
 
 (define (index-page-view sesh)
   (page
@@ -55,14 +56,12 @@
                        (img ((src "i/elephant.jpg")
                              (alt "The logo for lawnelephant. It looks like a green elephant."))))))
           (div ((id "indexft")) 
-
                (div ((class "intro")) 
                     (a ((href "/popular")) "browse all the posts on lawnelephant"))
                (div ((id "tagcloud"))
                     ,@(map (lambda (t)
                              `(span ,(tag-subst t #:supress-hash #t) " "))
-                           (gen-tag-list)))
-
+                           (gen-tag-list (get-feature-requests-generic))))
                (ul 
                  ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
                  ,(li-a "http://blog.lawnelephant.com" "blog")
@@ -72,8 +71,6 @@
                ;; XXX goog analytics really needs to be just before the closing body tag, but I
                ;; don't know how to put it there just yet
                ,(raw-str goog-analytics)))))
-
-
 
 (define (post-feature-view sesh #:form-view (form-markup request-feature-form-view))
   (page
@@ -139,13 +136,13 @@
   (let ((tags (regexp-split #px"[^[:alnum:]]" tag)))
     (page
       #:design (base-design #:title (format "~A at lawnelephant" tag))
-      `(div ((id "doc"))
-            ,(hd-div)
-            ,(subhead-div sesh)
-            (div ((id "bd"))
-                 (ul ,@(map (cut feature-req-view sesh <>)
-                            (get-feature-requests-by-tags tags))))
-            ,(div-footer)))))
+      (let ((post-pool (get-feature-requests-by-tags tags)))
+        `(div ((id "doc"))
+              ,(hd-div)
+              ,(subhead-div sesh)
+              (div ((id "bd"))
+                   (ul ,@(map (cut feature-req-view sesh <>) post-pool)))
+              ,(div-footer))))))
 
 
 ;; once gen-tag-page gets built out this won't be needed anymore
