@@ -55,17 +55,14 @@
                        (img ((src "i/elephant.jpg")
                              (alt "The logo for lawnelephant. It looks like a green elephant."))))))
           (div ((id "indexft")) 
+
+               (div ((class "intro")) 
+                    (a ((href "/popular")) "browse all the posts on lawnelephant"))
                (div ((id "tagcloud"))
                     ,@(map (lambda (t)
                              `(span ,(tag-subst t #:supress-hash #t) " "))
                            (gen-tag-list)))
-                    
-               (div ((class "something"))
-                    "Anyone can request a feature or make a post.  We'll add features based on what's requested.  The only rule is that we can only make features that other people request.")
 
-
-               (div ((class "intro")) 
-                    (a ((href "/popular")) "browse all the posts on lawnelephant"))
                (ul 
                  ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
                  ,(li-a "http://blog.lawnelephant.com" "blog")
