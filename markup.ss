@@ -53,9 +53,18 @@
                                   URL_OPTIONAL_PORT_REGEXP
                                   URL_SUBDIR_REGEXP))
 
-(define (tag-subst tag-str)
-  (web-link tag-str
-            (format "/tag/~A" (second (regexp-match "#(.+)" tag-str)))))
+;; this marks up tags. Does it belong in tags.ss or markup.ss?
+;; 
+;; on the tag clouds we don't want to show hashes
+;; but in a post we do (because it is educational)
+
+(define (tag-subst tag-str 
+                   #:supress-hash (supress? #f))
+  (let ((str (second (regexp-match "#(.+)" tag-str))))
+    (if supress? 
+      (web-link str (format "/tag/~A" str))
+      `(span "#" ,(web-link str (format "/tag/~A" str))))))
+
 ;; handles newlines, tags and URLs...
 
 (define (markup-body stri)

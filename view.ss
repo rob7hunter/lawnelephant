@@ -58,10 +58,10 @@
 
                (div ((id "tagcloud"))
                     (span ,@(map (lambda (t)
-                                 `(span ,(tag-subst t) " "))
+                                 `(span ,(tag-subst t #:supress-hash #t) " "))
                                (gen-tag-list))))
                     
-               (div ((class "intro something"))
+               (div ((class "something"))
                     "Anyone can request a feature or make a post.  We'll add features based on what's requested.  The only rule is that we can only make features that other people request.")
 
 
