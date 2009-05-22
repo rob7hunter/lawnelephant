@@ -9,9 +9,21 @@
   li-a
   goog-analytics
   standard-footer
+  div-id
+  div-footer
+  hd-div
   )
 
+(define (hd-div)
+  `(div ((id "hd"))
+        (a ((href "/"))
+           (span ((id "text-logo")) "lawnelephant"))))
 
+(define (div-id id rest)
+  `(div ((id ,id)) ,rest))
+
+(define (div-footer)
+  (div-id "ft" standard-footer))
 
 (define (base-design #:title (title "lawnelephant"))
   (design

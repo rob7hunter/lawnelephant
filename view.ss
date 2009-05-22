@@ -23,12 +23,6 @@
                            (post-feature-view sesh))))
       ,str))
 
-(define (div-id id rest)
-  `(div ((id ,id)) ,rest))
-
-(define (div-footer)
-  (div-id "ft" standard-footer))
-
 (define (slugify xs)
   (cond
     ((null? xs) "")
@@ -118,10 +112,7 @@
                (ul ,(feature-req-view sesh feat-id)))
           ,(div-footer))))
 
-(define (hd-div)
-  `(div ((id "hd"))
-        (a ((href "/"))
-           (span ((id "text-logo")) "lawnelephant"))))
+
 
 (define (subhead-div sesh)
   `(div ((id "subhead"))
