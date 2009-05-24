@@ -122,9 +122,10 @@
                       (get-feature-requests-by-tags tags)
                       (get-feature-requests-generic))))
     (page
-      #:design (base-design #:title (format "~A at lawnelephant" tag))
+      #:design (base-design #:title (aif tag ; to handle when tag is #f
+                                         (format "~A at lawnelephant" it)
+                                         "all posts at lawnelephant"))
       `(div ((id "doc"))
-            ,(hd-div)
             ,(awesomecloud post-pool tags)
             ,(subhead-div sesh)
             (div ((id "bd"))
@@ -133,11 +134,15 @@
 
 (define (hd-div)
   `(div ((id "hd"))
-        (div (a ((href "/") 
-            (id "text-logo")) "lawnelephant"))))
+        (a ((href "/") 
+            (id "text-logo")) "lawnelephant")))
 
 (define (awesomecloud post-pool tag-list) 
   `(div ((id "awesomecloud")) 
+        (a ((href "/") 
+            (id "text-logo")) "lawnelephant")
+        (span ((id "arrow"))
+              ,(raw-str "&rarr;"))
         ,@(map (lambda (t) (tag-subst t #:supress-hash #t #:tag-list tag-list))
                (gen-tag-list post-pool))))
 

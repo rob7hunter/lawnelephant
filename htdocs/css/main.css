@@ -1,11 +1,12 @@
 #hd {
+    padding: .5em 0em .5em 1em;
     background: #006632;
 }
 
 
 
 #awesomecloud span a {
-    color: white;
+    color: #ccc;
     margin: 0em .25em 0em 0em;
 }
 
@@ -15,10 +16,11 @@
 
 #awesomecloud {
     background: #357721;
-    padding: 0em 0em 0em 1em;
+    padding: .25em 0em .250em 1em;
 }
 
-.activetag {
+#awesomecloud .activetag a {
+    color: white;
     font-weight: bold;
 }
 
@@ -88,11 +90,16 @@
     text-align: center;
 }
 
-
 #text-logo {
     color: #ffffff;
     font-weight: bold;
-    margin: 1em 0em 0em 1em;
+    margin: 0em .5em 0em 0em;
+}
+
+#arrow {
+    color: white;
+    font-weight: bold;
+    margin: 0em .5em 0em 0em;
 }
 
 .reply {
@@ -215,7 +222,7 @@ body {
 
 #ft {
     padding: .25em .5em;
-    background: #5E9E01 none repeat scroll 0 0;
+    background: #357721 none repeat scroll 0 0;
 }
 
 #ft  ul  li {
