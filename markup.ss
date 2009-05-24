@@ -59,11 +59,35 @@
 ;; but in a post we do (because it is educational)
 
 (define (tag-subst tag-str 
-                   #:supress-hash (supress? #f))
-  (let ((str (second (regexp-match "#(.+)" tag-str))))
-    (if supress? 
-      (web-link str (format "/tag/~A" str))
-      `(span "#" ,(web-link str (format "/tag/~A" str))))))
+                   #:supress-hash (supress? #f)
+                   #:tag-list (tags #f))
+  (let* ((str (second (regexp-match "#(.+)" tag-str)))
+         (hash-decorator (if supress? "" "#"))
+         (link (if tags 
+                 (format "/tag/~A" (tags-to-url (make-new-taglist str tags))) 
+                 (format "/tag/~A" str))))
+    `(span ,(xexpr-if (and tags (member str tags)) 
+                      `((class "activetag")))
+           ,hash-decorator 
+           ,(web-link str link))))
+
+
+;; (make-new-taglist "cheese" '("beer" "coke")) -> '("cheese" "beer" "coke")
+;; (make-new-taglist "beer" '("beer" "coke")) -> '("coke")
+
+(define (make-new-taglist tag tags)
+  (if (member tag tags)
+    (remove tag tags)
+    (sort (append (list tag) tags) string<=?)))
+
+;; '("feature" "complete") -> "feature+list"
+
+(define (tags-to-url tags)
+  (cond
+    ((null? tags) "")
+    ((null? (cdr tags)) (car tags))
+    (else (string-append (car tags) "+" (tags-to-url (cdr tags))))))
+
 
 ;; handles newlines, tags and URLs...
 

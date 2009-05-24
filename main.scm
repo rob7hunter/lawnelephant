@@ -46,6 +46,9 @@
   #:blank #t
   (gen-tag-page sesh tag))
 
+(define-session-page (tag-page-no-tags req sesh)
+  #:blank #t
+  (gen-tag-page sesh #f))
 
 ;; caches
 

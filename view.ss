@@ -114,6 +114,33 @@
 
 
 
+(define (gen-tag-page sesh tag)
+  (let* ((tags (if tag 
+                 (regexp-split #px"[^[:alnum:]]" tag)
+                 '()))
+         (post-pool (if tag 
+                      (get-feature-requests-by-tags tags)
+                      (get-feature-requests-generic))))
+    (page
+      #:design (base-design #:title (format "~A at lawnelephant" tag))
+      `(div ((id "doc"))
+            ,(hd-div)
+            ,(awesomecloud post-pool tags)
+            ,(subhead-div sesh)
+            (div ((id "bd"))
+                 (ul ,@(map (cut feature-req-view sesh <>) post-pool)))
+            ,(div-footer)))))
+
+(define (hd-div)
+  `(div ((id "hd"))
+        (div (a ((href "/") 
+            (id "text-logo")) "lawnelephant"))))
+
+(define (awesomecloud post-pool tag-list) 
+  `(div ((id "awesomecloud")) 
+        ,@(map (lambda (t) (tag-subst t #:supress-hash #t #:tag-list tag-list))
+               (gen-tag-list post-pool))))
+
 (define (subhead-div sesh)
   `(div ((id "subhead"))
         (div ((id "posta"))
@@ -122,19 +149,6 @@
             ,(li-a "/newest" "new")
             ,(li-a "/popular" "hot")
             ,(li-a "/completed" "completed"))))
-
-(define (gen-tag-page sesh tag)
-  (let ((tags (regexp-split #px"[^[:alnum:]]" tag)))
-    (page
-      #:design (base-design #:title (format "~A at lawnelephant" tag))
-      (let ((post-pool (get-feature-requests-by-tags tags)))
-        `(div ((id "doc"))
-              ,(hd-div)
-              ,(subhead-div sesh)
-              (div ((id "bd"))
-                   (ul ,@(map (cut feature-req-view sesh <>) post-pool)))
-              ,(div-footer))))))
-
 
 ;; once gen-tag-page gets built out this won't be needed anymore
 (define (list-page-view sesh title feat-pool)

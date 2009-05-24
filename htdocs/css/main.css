@@ -1,11 +1,33 @@
+#hd {
+    background: #006632;
+}
+
+
+
+#awesomecloud span a {
+    color: white;
+    margin: 0em .25em 0em 0em;
+}
+
+#awesomecloud span:after {
+    content: " ";
+}
+
+#awesomecloud {
+    background: #357721;
+    padding: 0em 0em 0em 1em;
+}
+
+.activetag {
+    font-weight: bold;
+}
+
 #tagcloud {
     margin-top: 1em;
     text-align: justify;
 }
 .something {
-    margin-top: 1em;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 1em auto 0em auto;
     width: 30em;
 }
 
@@ -19,24 +41,14 @@
     max-width: 30em;
 }
 
-#signin {
-    float: right;
-    color: white;
-}
 
 
 #subhead {
-    background: #7EBE21;
+    background: #5e9e01;
 }
 .tab li {
-    margin-bottom: 0em;
-    margin-top: 0em;
-    margin-left: 0.50em;
-    margin-right: 0.0em;
-    padding-right: 0em;
-    padding-left: 0.5em;
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
+    margin: 0em 0em 0em .5em;
+    padding: .25em 0em .25em .5em;
     display: inline;
 }
 
@@ -71,6 +83,7 @@
 .more {margin-right: .5em;}
 .ago {margin-left: .5em;}
 .pts {margin: 0em .25em 0em 0em;}
+
 #indexhd {
     text-align: center;
 }
@@ -79,9 +92,7 @@
 #text-logo {
     color: #ffffff;
     font-weight: bold;
-    margin-left: 1em;
-    margin-right: 1em;
-    padding-top: 1em;
+    margin: 1em 0em 0em 1em;
 }
 
 .reply {
@@ -98,14 +109,6 @@ h1 {
 }
 
 
-#hd {
-    background: #5e9e01;
-    padding-top: .50em;
-    padding-bottom: .50em;
-    margin: 0em;
-    height: 1em;
-    vertical-align: bottom;
-}
 
 #posta {
     margin: 0em 0em 0em 1em;
@@ -168,7 +171,6 @@ li {
     margin-top: 1em;
     margin-bottom: 1em;
     margin-left: 0em;
-    max-width: 40em;
 }
 
 
