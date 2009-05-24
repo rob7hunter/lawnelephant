@@ -46,12 +46,12 @@
           (h1 "lawnelephant")
           (div ((id "bd"))
                (div ((id "elephant-holder"))
-                    (a ((href "/popular"))
+                    (a ((href "/tag/"))
                        (img ((src "i/elephant.jpg")
                              (alt "The logo for lawnelephant. It looks like a green elephant."))))))
           (div ((id "indexft")) 
                (div ((class "intro")) 
-                    (a ((href "/popular")) "browse all the posts on lawnelephant"))
+                    (a ((href "/tag/")) "browse all the posts on lawnelephant"))
                (div ((id "tagcloud"))
                     ,@(map (lambda (t)
                              `(span ,(tag-subst t #:supress-hash #t) " "))
@@ -137,6 +137,8 @@
         (a ((href "/") 
             (id "text-logo")) "lawnelephant")))
 
+;; note: use delete-duplicates to handle posts like: "#idoh #idoh something ..."
+
 (define (awesomecloud post-pool tag-list) 
   `(div ((id "awesomecloud")) 
         (a ((href "/") 
@@ -144,7 +146,7 @@
         (span ((id "arrow"))
               ,(raw-str "&rarr;"))
         ,@(map (lambda (t) (tag-subst t #:supress-hash #t #:tag-list tag-list))
-               (gen-tag-list post-pool))))
+               (delete-duplicates (gen-tag-list post-pool)))))
 
 (define (subhead-div sesh)
   `(div ((id "subhead"))
