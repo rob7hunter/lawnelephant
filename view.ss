@@ -112,10 +112,8 @@
                      ,(raw-str "&rarr;"))
                (span ((id "singlethread")) "you are looking at a single thread"))
           (div ((id "bd"))
-               (ul ,(feature-req-view sesh feat-id)))
+               (ul ,(feature-req-view sesh feat-id #:reply-redirect (gen-feature-link feat-id))))
           ,(div-footer))))
-
-
 
 (define (gen-tag-page sesh tag)
   (let* ((tags (if tag 
@@ -213,14 +211,16 @@
       (else 
         (make-ago-string "second" ago)))))
 
-(define (feature-req-view sesh feat)
+(define (feature-req-view sesh feat #:reply-redirect (reply-redirect #f))
   `(li (span ((class "explanation"))
              ,(if (equal? "missing" (feature-request-expl-no-markup feat))
                 (rec-prop feat 'body)
                 (feature-request-expl feat)))
 
-       (span ((class "reply")) ; XXX needs to redirect to a better place
-             ,(comment-on-item-link feat sesh #:redirect-to "/newest")) 
+       ;; if the reply is coming from a permalink, then redirect back to the permalink
+       ;; where is the best place to redirect to from elsewhere?
+       (span ((class "reply")) 
+             ,(comment-on-item-link feat sesh #:redirect-to (aif reply-redirect it "/newest"))) 
 
        ,(xexpr-if (rec-type-is? feat 'feature-request)
           `(span ((class "features-only"))
@@ -237,17 +237,13 @@
                        (class "up"))
                       ,(raw-str "&#9734;")))
 
-       (span ((class "pts")) 
-             ,(format "~A" (vote-score feat)))
-
-       (span ((class "voteinfo"))
-             "points")
-       (span ((class "ago"))
-             ,(time-ago (rec-prop feat 'created-at)))
+       (span ((class "pts")) ,(format "~A" (vote-score feat)))
+       (span ((class "voteinfo")) "points")
+       (span ((class "ago")) ,(time-ago (rec-prop feat 'created-at)))
 
        ;XXX doesn't look proper, shouldn't I be able to just (when (get-comments feat) ...)
        ,(xexpr-if (> (count-comments feat) 0)
-          `(ul ((class "indent")) ,@(map (λ(x) (feature-req-view sesh x))
+          `(ul ((class "indent")) ,@(map (λ(x) (feature-req-view sesh x #:reply-redirect reply-redirect))
                                          (get-comments feat))))))
 
 (define (delete-entry-view feat-req-rec)
