@@ -1,12 +1,14 @@
-#hd {
-    padding: .5em 0em .5em 1em;
-    background: #006632;
+#singlethread {
+    color: white;
 }
 
-
+#hd {
+    padding: .5em 0em .5em 1em;
+    background: #357721;
+}
 
 #awesomecloud span a {
-    color: #ccc;
+    color: #ddd;
     margin: 0em .25em 0em 0em;
 }
 
@@ -28,6 +30,7 @@
     margin-top: 1em;
     text-align: justify;
 }
+
 .something {
     margin: 1em auto 0em auto;
     width: 30em;
@@ -43,11 +46,10 @@
     max-width: 30em;
 }
 
-
-
 #subhead {
     background: #5e9e01;
 }
+
 .tab li {
     margin: 0em 0em 0em .5em;
     padding: .25em 0em .25em .5em;
@@ -116,7 +118,6 @@ h1 {
 }
 
 
-
 #posta {
     margin: 0em 0em 0em 1em;
     float: left;
@@ -154,9 +155,6 @@ img {
     text-align: center;
 }
 
-
-
-
 input {
     margin-top: 1em;
 }
@@ -175,9 +173,7 @@ ul li {
 }
 
 li {
-    margin-top: 1em;
-    margin-bottom: 1em;
-    margin-left: 0em;
+    margin: 1em 0em 1em 0em;
 }
 
 
@@ -208,8 +204,6 @@ body {
 
     width: 100%;
 }
-
-
 
 #indexft  ul  li {
     display: inline;

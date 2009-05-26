@@ -18,9 +18,17 @@
          gen-tag-page
          )
 
-(define (req-link sesh str)
+;; this might be the ugliest function definition ever created in the
+;; history of PLT Scheme
+
+(define (req-link sesh 
+                  str 
+                  #:post-pool (post-pool #f) 
+                  #:tag-list (tags #f))
   `(a ((href ,(body-as-url (req)
-                           (post-feature-view sesh))))
+                           (post-feature-view sesh 
+                                              #:post-pool post-pool 
+                                              #:tag-list tags))))
       ,str))
 
 (define (slugify xs)
@@ -66,48 +74,43 @@
                ;; don't know how to put it there just yet
                ,(raw-str goog-analytics)))))
 
-(define (post-feature-view sesh #:form-view (form-markup request-feature-form-view))
+(define (post-feature-view sesh 
+                           #:post-pool (post-pool #f) 
+                           #:tag-list (tags #f) 
+                           #:form-view (form-markup request-feature-form-view))
   (page
-   #:design (base-design)
-   `(div ((id "doc"))
-         (div ((id "hd"))
-              (a ((href "/"))
-                 (span ((id "text-logo")) "lawnelephant")))
-         (div ((id "bd"))
-              (div ((id "requests"))
-                   ,(form-markup sesh)))
-         (div ((id "instructions"))
-              "Make your post easier to find by adding tags. Just put a # before any word to turn it into a tag. For example "
-              ,(web-link "#feature" "/tag/feature")
-              " or "
-              ,(web-link "#question" "/tag/question"))
-         (div ((id "indexft")) 
-              (ul 
-               ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
-               ,(li-a "http://blog.lawnelephant.com" "blog")
-               ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
-               ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
-               ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
-              ;; XXX goog analytics really needs to be just before the closing body tag, but I
-              ;; don't know how to put it there just yet
-              ,(raw-str goog-analytics)))))
+    #:design (base-design)
+    `(div ((id "doc"))
+          ,(xexpr-if (and post-pool tags) (awesomecloud post-pool tags))
+          (div ((id "bd"))
+               (div ((id "requests"))
+                    ,(form-markup sesh)))
+          (div ((id "instructions"))
+               "Make your post easier to find by adding tags. Just put a # before any word to turn it into a tag. For example "
+               ,(web-link "#feature" "/tag/feature")
+               " or "
+               ,(web-link "#question" "/tag/question"))
+          (div ((id "indexft")) 
+               (ul 
+                 ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
+                 ,(li-a "http://blog.lawnelephant.com" "blog")
+                 ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
+                 ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
+                 ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
+               ;; XXX goog analytics really needs to be just before the closing body tag, but I
+               ;; don't know how to put it there just yet
+               ,(raw-str goog-analytics)))))
 
 (define (feature-detail-page-view sesh feat-id)
   (page
-    #:design (base-design #:title "more | lawnelephant")
+    #:design (base-design #:title "permalink at lawnelephant")
     `(div ((id "doc"))
           (div ((id "hd"))
-               (div ((id "Signin"))
-                    ,(req-link sesh "post"))    
                (a ((href "/"))
-                  (span ((id "text-logo")) "lawnelephant")))
-          (div ((id "subhead"))
-               (div ((id "posta"))
-                    ,(req-link sesh "post"))
-               (ul ((class "tab"))
-                   ,(li-a "/newest" "new")
-                   ,(li-a "/popular" "hot")
-                   ,(li-a "/completed" "completed")))
+                  (span ((id "text-logo")) "lawnelephant"))
+               (span ((id "arrow"))
+                     ,(raw-str "&rarr;"))
+               (span ((id "singlethread")) "you are looking at a single thread"))
           (div ((id "bd"))
                (ul ,(feature-req-view sesh feat-id)))
           ,(div-footer))))
@@ -127,7 +130,7 @@
                                          "all posts at lawnelephant"))
       `(div ((id "doc"))
             ,(awesomecloud post-pool tags)
-            ,(subhead-div sesh)
+            ,(subhead-div sesh #:post-pool post-pool #:tag-list tags)
             (div ((id "bd"))
                  (ul ,@(map (cut feature-req-view sesh <>) post-pool)))
             ,(div-footer)))))
@@ -148,10 +151,12 @@
         ,@(map (lambda (t) (tag-subst t #:supress-hash #t #:tag-list tag-list))
                (delete-duplicates (gen-tag-list post-pool)))))
 
-(define (subhead-div sesh)
+(define (subhead-div sesh 
+                     #:post-pool (post-pool #f) 
+                     #:tag-list (tags #f))
   `(div ((id "subhead"))
         (div ((id "posta"))
-             ,(req-link sesh "post"))
+             ,(req-link sesh "post" #:post-pool post-pool #:tag-list tags))
         (ul ((class "tab"))
             ,(li-a "/newest" "new")
             ,(li-a "/popular" "hot")
