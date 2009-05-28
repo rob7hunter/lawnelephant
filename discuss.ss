@@ -33,7 +33,7 @@
           (div ((id "bd"))
                (div ((id "text-you-are-replying-to"))
                     "You are replying to:"
-                    (br)
+                    (br)(br)
                     (span ((class "explanation"))
                           ,(if (equal? "missing" (feature-request-expl-no-markup parent-item))
                              (rec-prop parent-item 'body)

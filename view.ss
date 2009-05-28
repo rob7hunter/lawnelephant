@@ -60,7 +60,9 @@
           (div ((id "indexft")) 
                (div ((class "intro")) 
                     (a ((href "/tag/")) "browse all the posts on lawnelephant"))
+               (div ((id "tagcloudexplained")) "Tags on lawnelephant:")
                (div ((id "tagcloud"))
+                    
                     ,@(map (lambda (t)
                              `(span ,(tag-subst t #:supress-hash #t) " "))
                            (gen-tag-list (get-feature-requests-generic))))
