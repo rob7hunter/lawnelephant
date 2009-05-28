@@ -35,9 +35,7 @@
                     "You are replying to:"
                     (br)(br)
                     (span ((class "explanation"))
-                          ,(if (equal? "missing" (feature-request-expl-no-markup parent-item))
-                             (rec-prop parent-item 'body)
-                             (feature-request-expl parent-item))))
+                          ,(post-body parent-item)))
                (div ((id "requests"))
                     ,(form '((body "" long-text))
                            #:submit-label "reply"

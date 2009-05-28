@@ -16,7 +16,7 @@
 
 (define (get-feature-requests-generic #:restricted-to (filter-fn #f)
                                       #:sort-by (sort-by 'created-at))
-  (load-where #:type 'feature-request
+  (load-where #:type 'post
               #:sort-by sort-by
               #:compare >
               #:restricted-to filter-fn))
@@ -24,7 +24,7 @@
 (define TAG_REGEXP #px"((?<=^)|(?<=[[:blank:]]))#[A-Za-z0-9]+")
 
 (define (extract-tags feat)
-  (regexp-match* TAG_REGEXP (rec-prop feat 'explanation)))
+  (regexp-match* TAG_REGEXP (rec-prop feat 'body)))
 
 (define (has-tag? feat tag)
   (member (string-append "#" tag)

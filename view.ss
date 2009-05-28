@@ -45,7 +45,7 @@
                  #px".{,90}[[:alnum:]]" 
                  (slugify 
                    (regexp-split #px"[^[:alnum:]]+" 
-                                 (rec-prop feat 'explanation)))))))
+                                 (rec-prop feat 'body)))))))
 
 (define (index-page-view sesh)
   (page
@@ -185,11 +185,11 @@
                         (else (e "Unrecognized list type str ~A" type-str)))))
 
 (define (request-feature-form-view sesh tags)
-  (form '((explanation "" long-text))
+  (form '((body "" long-text))
         #:submit-label "post"
-        #:init `((type . feature-request)
+        #:init `((type . post)
                  (author. ,(session-id sesh))
-                 (explanation . ,(post-pre-pop-tag-str tags)))
+                 (body . ,(post-pre-pop-tag-str tags)))
         #:error-wrapper (lambda (error-form-view)
                           (index-page-view sesh #:form-view
                                            (lambda (sesh) error-form-view)))
@@ -217,21 +217,18 @@
 
 (define (feature-req-view sesh feat #:reply-redirect (reply-redirect #f))
   `(li (span ((class "explanation"))
-             ,(if (equal? "missing" (feature-request-expl-no-markup feat))
-                (rec-prop feat 'body)
-                (feature-request-expl feat)))
-
+             ,(post-body feat))
        ;; if the reply is coming from a permalink, then redirect back to the permalink
        ;; where is the best place to redirect to from elsewhere?
        (span ((class "reply")) 
              ,(comment-on-item-link feat sesh #:redirect-to (aif reply-redirect it "/newest"))) 
 
-       ,(xexpr-if (rec-type-is? feat 'feature-request)
+       ,(xexpr-if (rec-type-is? feat 'post)
           `(span ((class "features-only"))
                  ,(xexpr-if (in-admin-mode?)
                             (delete-entry-view feat))
 
-                 ,(xexpr-if (and (not (rec-prop feat 'completed)) 
+                 ,(xexpr-if (and (not (completed? feat))
                                  (in-admin-mode?))
                             (mark-as-completed-view feat))
                  (span ((class "more"))
@@ -259,8 +256,12 @@
   (** " "
       (web-link "[mark completed]" 
                 (body-as-url (req)
-                             (rec-set-prop! feat-req-rec 'completed #t)
-                             (store-rec! feat-req-rec)
+                             (unless (completed? feat-req-rec)
+                               (rec-set-prop! feat-req-rec
+                                              'body
+                                              (string-append (post-body feat-req-rec)
+                                                             " #complete"))
+                               (store-rec! feat-req-rec))
                              (redirect-to (page-url index-page))))))
 
 

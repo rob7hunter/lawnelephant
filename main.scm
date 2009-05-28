@@ -19,7 +19,7 @@
 (define-session-page (feature-detail-page req sesh feat-id-and-slug)
   #:blank #t
   (let ((feat-id (car (regexp-match #px"[a-z0-9]*" feat-id-and-slug))))
-       (only-rec-of-type feat-id feature-request (f)
+       (only-rec-of-type feat-id post (f)
                          (feature-detail-page-view sesh f))))
 
 (define-session-page (popular-page req sesh)
@@ -52,4 +52,4 @@
 
 ;; caches
 
-(define-type-cache feature-request)
+(define-type-cache post)
