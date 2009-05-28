@@ -1,7 +1,7 @@
 #lang scheme/base
 
-(require (planet "util.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
-         (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 5 (= 0)))
+(require (planet "util.scm" ("vegashacker" "leftparen.plt" 5 (= 1)))
+         (planet "leftparen.scm" ("vegashacker" "leftparen.plt" 5 (= 1)))
          "tags.ss"
          )
 

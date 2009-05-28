@@ -1,4 +1,4 @@
-(require (planet "settings.scm" ("vegashacker" "leftparen.plt" 5 (= 0))))
+(require (planet "settings.scm" ("vegashacker" "leftparen.plt" 5 (= 1))))
 
 (setting-set! *PORT* 8765)
 ;; use #f if you want to listen to all incoming IPs:
