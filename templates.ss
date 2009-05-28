@@ -13,7 +13,7 @@
   div-footer
   )
 
-
+(setting-set! *APP_VERSION* 2)
 
 (define (div-id id rest)
   `(div ((id ,id)) ,rest))
@@ -24,10 +24,9 @@
 (define (base-design #:title (title "lawnelephant"))
   (design
     #:raw-header '("<link rel=\"icon\" href=\"/favicon.png\">")
-   #:js '("http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js"
-          "/scripts/init.js")
-  ; #:css '("http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css&2.6.0/build/base/base-min.css&2.6.0/build/tabview/assets/skins/sam/tabview.css"
-   #:css '( "/css/main.css")
+   #:js (list "http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js"
+              (format "/scripts/init-~A.js" (setting *APP_VERSION*)))
+   #:css (list (format "/css/main-~A.css" (setting *APP_VERSION*)))
    #:title title))
 
 (define goog-analytics 
