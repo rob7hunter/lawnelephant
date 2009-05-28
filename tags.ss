@@ -9,6 +9,7 @@
   has-tag?
   has-all-tags?
   gen-tag-list
+  post-pre-pop-tag-str
   )
 
 ;; copied from data.ss. Can't require data b/c data requires tags! 
@@ -40,4 +41,7 @@
   (sort (apply lset-union string=? (map extract-tags post-pool))
         string<?))
 
-
+(define (post-pre-pop-tag-str tags)
+  (if (empty? tags)
+      ""
+      (string-append " " (string-join (map (cut string-append "#" <>) tags) " "))))

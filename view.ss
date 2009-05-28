@@ -79,14 +79,16 @@
 (define (post-feature-view sesh 
                            #:post-pool (post-pool #f) 
                            #:tag-list (tags #f) 
-                           #:form-view (form-markup request-feature-form-view))
+                           #:form-view (form-markup (cut request-feature-form-view
+                                                         sesh
+                                                         (or tags '()))))
   (page
     #:design (base-design)
     `(div ((id "doc"))
           ,(xexpr-if (and post-pool tags) (awesomecloud post-pool tags))
           (div ((id "bd"))
                (div ((id "requests"))
-                    ,(form-markup sesh)))
+                    ,(form-markup)))
           (div ((id "instructions"))
                "Make your post easier to find by adding tags. Just put a # before any word to turn it into a tag. For example "
                ,(web-link "#feature" "/tag/feature")
@@ -182,17 +184,17 @@
                         ((string=? type-str "completed") get-feature-requests-completed)
                         (else (e "Unrecognized list type str ~A" type-str)))))
 
-(define (request-feature-form-view sesh)
+(define (request-feature-form-view sesh tags)
   (form '((explanation "" long-text))
         #:submit-label "post"
         #:init `((type . feature-request)
-                 (author. ,(session-id sesh)))
+                 (author. ,(session-id sesh))
+                 (explanation . ,(post-pre-pop-tag-str tags)))
         #:error-wrapper (lambda (error-form-view)
                           (index-page-view sesh #:form-view
                                            (lambda (sesh) error-form-view)))
         #:validate feature-request-validator
         #:on-done (lambda (x) (redirect-to "/newest"))))
-
 
 (define (make-ago-string str num)
   (format "~A ~A ago" 
