@@ -13,7 +13,6 @@
          "admin.ss")
 
 (provide index-page-view
-         gen-show-list-view
          feature-detail-page-view 
          gen-tag-page
          )
@@ -156,33 +155,10 @@
 (define (subhead-div sesh 
                      #:post-pool (post-pool #f) 
                      #:tag-list (tags #f))
-  `(div ((id "subhead"))
-        (div ((id "posta"))
-             ,(req-link sesh "post" #:post-pool post-pool #:tag-list tags))
-        (ul ((class "tab"))
-            ,(li-a "/newest" "new")
-            ,(li-a "/popular" "hot")
-            ,(li-a "/completed" "completed"))))
+  `(div ((id "posta"))
+             ,(req-link sesh "post" #:post-pool post-pool #:tag-list tags)))
 
-;; once gen-tag-page gets built out this won't be needed anymore
-(define (list-page-view sesh title feat-pool)
-  (page
-    #:design (base-design #:title (format "~A | lawnelephant" title))
-    `(div ((id "doc"))
-          ,(hd-div)
-          ,(subhead-div sesh)
-          (div ((id "bd"))
-               (ul ,@(map (cut feature-req-view sesh <>)
-                          (feat-pool))))
-          ,(div-footer))))
 
-;; once gen-tag-page gets built out this won't be needed anymore
-(define (gen-show-list-view type-str sesh)
-  (list-page-view sesh type-str
-                  (cond ((string=? type-str "popular") get-feature-requests-popular)
-                        ((string=? type-str "newest") get-feature-requests-newest)
-                        ((string=? type-str "completed") get-feature-requests-completed)
-                        (else (e "Unrecognized list type str ~A" type-str)))))
 
 (define (request-feature-form-view sesh tags)
   (form '((body "" long-text))
@@ -194,7 +170,7 @@
                           (index-page-view sesh #:form-view
                                            (lambda (sesh) error-form-view)))
         #:validate feature-request-validator
-        #:on-done (lambda (x) (redirect-to "/newest"))))
+        #:on-done (lambda (x) (redirect-to "/tag"))))
 
 (define (make-ago-string str num)
   (format "~A ~A ago" 
@@ -220,8 +196,10 @@
              ,(post-body feat))
        ;; if the reply is coming from a permalink, then redirect back to the permalink
        ;; where is the best place to redirect to from elsewhere?
+
+       (span ((class "pts")) ,(format "~A with ~A votes" (time-ago (rec-prop feat 'created-at)) (vote-score feat)))
        (span ((class "reply")) 
-             ,(comment-on-item-link feat sesh #:redirect-to (aif reply-redirect it "/newest"))) 
+             ,(comment-on-item-link feat sesh #:redirect-to (aif reply-redirect it "/tag"))) 
 
        ,(xexpr-if (rec-type-is? feat 'post)
           `(span ((class "features-only"))
@@ -238,9 +216,6 @@
                        (class "up"))
                       ,(raw-str "&#9734;")))
 
-       (span ((class "pts")) ,(format "~A" (vote-score feat)))
-       (span ((class "voteinfo")) "points")
-       (span ((class "ago")) ,(time-ago (rec-prop feat 'created-at)))
 
        ;XXX doesn't look proper, shouldn't I be able to just (when (get-comments feat) ...)
        ,(xexpr-if (> (count-comments feat) 0)

@@ -22,25 +22,14 @@
        (only-rec-of-type feat-id post (f)
                          (feature-detail-page-view sesh f))))
 
-(define-session-page (popular-page req sesh)
-  #:blank #t
-  (gen-show-list-view "popular" sesh))
-
-(define-session-page (newest-page req sesh)
-  #:blank #t
-  (gen-show-list-view "newest" sesh))
-
-(define-session-page (completed-page req sesh)
-  #:blank #t
-  (gen-show-list-view "completed" sesh))
-
 
 (define-session-page (signin-page req sesh)
   (welcome-message sesh #:no-register #t))
 
-(define-admin-session-page (adminified-index-page req sesh page-type-str)
-  #:blank #t
-  (admin-mode (gen-show-list-view page-type-str sesh)))
+;; XXX need to get back to this one
+;(define-admin-session-page (adminified-index-page req sesh page-type-str)
+;  #:blank #t
+;  (admin-mode (gen-show-list-view page-type-str sesh)))
 
 (define-session-page (tag-page req sesh tag)
   #:blank #t

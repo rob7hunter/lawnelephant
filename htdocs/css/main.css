@@ -132,11 +132,9 @@ h1 {
 
 #posta {
     margin: 0em 0em 0em 1em;
-    float: left;
 }
 
 #posta a {
-    color: white;
     font-weight: bold;
 }
 

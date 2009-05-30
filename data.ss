@@ -7,10 +7,7 @@
          "tags.ss"
          )
 
-(provide get-feature-requests-popular
-         get-feature-requests-newest
-         get-feature-requests-completed
-         get-feature-requests-by-tags
+(provide get-feature-requests-by-tags
          get-feature-requests-generic 
          post-body
          any-body-markup
@@ -18,19 +15,10 @@
          feature-request-validator
          completed?)
 
-(define (get-feature-requests-completed)
-  (get-feature-requests-generic #:restricted-to completed?
-                                #:sort-by reddit-score))
-
-(define (get-feature-requests-popular)
-  (get-feature-requests-generic #:restricted-to (lambda (x) (not (completed? x)))
-                                #:sort-by reddit-score))
-
-(define (get-feature-requests-newest)
-  (get-feature-requests-generic #:restricted-to (lambda (x) (not (completed? x)))))
 
 (define (get-feature-requests-by-tags tag)
-  (get-feature-requests-generic #:restricted-to (lambda (feat) 
+  (get-feature-requests-generic #:sort-by reddit-score
+                                #:restricted-to (lambda (feat) 
                                                   (has-all-tags? feat tag))))
 
 (define (get-feature-requests-generic #:restricted-to (filter-fn #f)
