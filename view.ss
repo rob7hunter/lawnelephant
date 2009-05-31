@@ -141,11 +141,6 @@
                  (ul ,@(map (cut feature-req-view sesh <>) post-pool)))
             ,(div-footer)))))
 
-(define (hd-div)
-  `(div ((id "hd"))
-        (a ((href "/") 
-            (id "text-logo")) "lawnelephant")))
-
 ;; note: use delete-duplicates to handle posts like: "#idoh #idoh something ..."
 
 (define (awesomecloud post-pool tag-list) 
