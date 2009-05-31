@@ -41,7 +41,7 @@
           (rec-id feat)
           "-"
           (car (regexp-match 
-                 #px".{,90}[[:alnum:]]" 
+                 #px".{,20}[[:alnum:]]" 
                  (slugify 
                    (regexp-split #px"[^[:alnum:]]+" 
                                  (rec-prop feat 'body)))))))
@@ -61,7 +61,7 @@
                     (a ((href "/tag/")) "browse all the posts on lawnelephant"))
                (div ((id "tagcloudexplained")) "Tags on lawnelephant:")
                (div ((id "tagcloud"))
-                    
+
                     ,@(map (lambda (t)
                              `(span ,(tag-subst t #:supress-hash #t) " "))
                            (gen-tag-list (get-feature-requests-generic))))
@@ -71,6 +71,11 @@
                  ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
                  ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
                  ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
+               (div ((id "adage"))
+                    ,(let* ((adages (get-feature-requests-generic #:restricted-to (cut has-tag? <> "adage")))
+                            (adage (list-ref adages (random (length adages)))))
+                       `(span ,(markup-body (rec-prop adage 'body)))))
+
                ;; XXX goog analytics really needs to be just before the closing body tag, but I
                ;; don't know how to put it there just yet
                ,(raw-str goog-analytics)))))
@@ -192,12 +197,16 @@
         (make-ago-string "second" ago)))))
 
 (define (feature-req-view sesh feat #:reply-redirect (reply-redirect #f))
-  `(li (span ((class "explanation"))
+  `(li ((id ,(format "~A" (rec-id feat))))
+
+       (span ((class "explanation"))
              ,(post-body feat))
        ;; if the reply is coming from a permalink, then redirect back to the permalink
        ;; where is the best place to redirect to from elsewhere?
 
-       (span ((class "pts")) ,(format "~A with ~A votes" (time-ago (rec-prop feat 'created-at)) (vote-score feat)))
+       (span ((class "ago")) ,(format " ~A with " (time-ago (rec-prop feat 'created-at))))
+       (span ((class "pts")) ,(format "~A" (vote-score feat)))
+       (span ((class "ago")) ,(format " vote~A" (if (eq? 1 (vote-score feat)) "" "s")))
        (span ((class "reply")) 
              ,(comment-on-item-link feat sesh #:redirect-to (aif reply-redirect it "/tag"))) 
 
@@ -209,8 +218,8 @@
                  ,(xexpr-if (and (not (completed? feat))
                                  (in-admin-mode?))
                             (mark-as-completed-view feat))
-                 (span ((class "more"))
-                       ,(web-link "link" (gen-feature-link feat)))))
+                 (span ((class "share"))
+                       ,(web-link "share" (gen-feature-link feat)))))
        ,(xexpr-if (can-vote-on? sesh feat)
                   `(a ((href ,(make-voter-url sesh feat "up"))
                        (class "up"))

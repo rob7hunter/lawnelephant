@@ -1,3 +1,6 @@
+#adage {
+    color: grey;
+}
 
 #tagcloudexplained {
     margin: 1em 0em;
@@ -96,9 +99,9 @@
     margin: 0em;
     color: #aaaaaa;
 }
-.more {margin-right: .5em;}
-.ago {margin-left: .5em;}
-.pts {margin: 0em .25em 0em 0em;}
+.share {margin-right: .5em;}
+.ago {margin-left: 0em;}
+.pts {margin: 0em 0em 25em 0em .5em;}
 
 #indexhd {
     text-align: center;
