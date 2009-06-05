@@ -17,8 +17,10 @@
 (define (comment-on-item-link item sesh
                               #:link-prose (prose "reply")
                               #:redirect-to (redirect #f))
-  (web-link prose (body-as-url (req)
-                               (create-comment-view item sesh #:redirect-to redirect))))
+  `(a ((href ,(body-as-url (req)
+                           (create-comment-view item sesh #:redirect-to redirect)))
+       (class "reply"))
+      ,prose))
 
 (define (create-comment-view parent-item sesh #:redirect-to (redirect #f))
   (page

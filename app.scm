@@ -8,6 +8,7 @@
   (signin-page (url "/signin"))
   (adminified-index-page (url "/admin/" (string-arg)))
   (tag-page-no-tags (url "/tag"))
+  (article-feed-page (url "/atom/" (string-arg)))
   (tag-page (url "/tag/" (string-arg)))
   )
 

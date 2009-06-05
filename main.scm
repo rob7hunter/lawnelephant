@@ -8,7 +8,7 @@
 
 (define-session-page (index-page req sesh)
   #:blank #t
-  (index-page-view sesh))
+  (gen-tag-page sesh #f))
 
 
 ;; This supports slugified urls.
@@ -30,6 +30,10 @@
 ;(define-admin-session-page (adminified-index-page req sesh page-type-str)
 ;  #:blank #t
 ;  (admin-mode (gen-show-list-view page-type-str sesh)))
+
+(define-page (article-feed-page req tag)
+             #:blank #t
+                     (gen-rss-page tag))
 
 (define-session-page (tag-page req sesh tag)
   #:blank #t

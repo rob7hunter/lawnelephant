@@ -3,9 +3,19 @@ $(document).ready(function() {
     // if there is an input box, set focus there
     $(".text-input").focus();
 
-    // attach click event handler to all upvotes (XXX DRY alert)
-    $("a.up").click(function(ev)
-    {
+    $("span.share").click(function(ev) {
+
+        ev.preventDefault();
+        var t = this;
+        this.hide();
+
+        return false;
+    });
+
+
+    // attach click event handler to all upvotes 
+    $("a.up").click(function(ev) {
+
         ev.preventDefault();
         var t = this;
         the_url = $(t).attr('href');

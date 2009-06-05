@@ -1,21 +1,36 @@
+
+#posta > form > input {
+    font-size: 1em;
+    display: inline;
+    padding: 0em;
+}
+
+input {
+    font-size: 1em;
+    margin-top: 1em;
+}
+
+.inline-reply  form {
+    font-size: 1em;
+}
+
+.inline-reply {
+    display: none;
+}
+.inline-reply > form > input {
+    display: inline;
+}
+
+.tbd {
+    background: #5E9E01;
+}
+
+
 #adage {
+    margin: .5em 0em .5em 1em;
     color: grey;
 }
 
-#tagcloudexplained {
-    margin: 1em 0em;
-}
-
-
-#text-you-are-replying-to {
-    margin: 1em 0em 0em 1em;
-}
-
-
-
-#singlethread {
-    color: white;
-}
 
 #hd {
     padding: .5em 0em .5em 1em;
@@ -41,25 +56,6 @@
     font-weight: bold;
 }
 
-#tagcloud {
-    margin-top: 1em;
-    text-align: justify;
-}
-
-.something {
-    margin: 1em auto 0em auto;
-    width: 30em;
-}
-
-.intro {
-    font-weight: bold;
-    margin-top: 1em;
-}
-
-#instructions {
-    margin-left: 1em;
-    max-width: 30em;
-}
 
 #subhead {
     background: #5e9e01;
@@ -75,20 +71,6 @@
 .up {
     margin: 0em .5em 0em 0em;
 }
-.tab a {
-    color: white;
-}
-    
-.tab {
-    display: inline;
-    margin: 0em;
-}
-
-
-#requests {
-    margin: 1em;
-    max-width: 30em;
-}
 
 
 .simple {
@@ -99,13 +81,10 @@
     margin: 0em;
     color: #aaaaaa;
 }
-.share {margin-right: .5em;}
+
 .ago {margin-left: 0em;}
 .pts {margin: 0em 0em 25em 0em .5em;}
 
-#indexhd {
-    text-align: center;
-}
 
 #text-logo {
     color: #ffffff;
@@ -124,12 +103,15 @@
 }
 
 
-a, h1 {
+a {
     color: #5e9e01;
 }
 
 h1 {
-    margin-top: 1em;
+    
+    color: white;
+    font-size: 1.5em;
+    margin: 0em 0em 0em .6666em;
 }
 
 
@@ -137,43 +119,18 @@ h1 {
     margin: 0em 0em 0em 1em;
 }
 
-#posta a {
-    font-weight: bold;
-}
 
 .explanation {
-    font-family: Helvetica,sans-serif;
+    font-family: 'Lucida Grande';
     color: #333333;
     font-size: 1em;
 }
-#doc, #docindex {
+
+#doc {
     padding: 0em;
     margin-top: 0em;
     margin-right: auto;
     margin-left: auto;
-}
-
-#docindex {
-    text-align: center;
-    max-width: 40em;
-}
-
-
-img {
-    border: none;
-    margin: 0em 0em 0em 0em;
-}
-
-#elephant-holder {
-    text-align: center;
-}
-
-input {
-    margin-top: 1em;
-}
-
-div > .reply-link {
-    font-size: 1em;
 }
 
 ul {
@@ -213,19 +170,11 @@ body {
     font-size: 1em;
 }
 
-.text-input {
-
-    width: 100%;
-}
 
 #indexft  ul  li {
     display: inline;
 }
 
-#indexft ul li a {
-    padding: 0em .5em;
-    padding-left: 0em;
-}
 
 #ft {
     padding: .25em .5em;
@@ -240,3 +189,5 @@ body {
     padding: 0em .5em;
     color: white;
 }
+
+

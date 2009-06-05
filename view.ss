@@ -12,23 +12,11 @@
          "tags.ss"
          "admin.ss")
 
-(provide index-page-view
+(provide 
          feature-detail-page-view 
          gen-tag-page
+         gen-rss-page
          )
-
-;; this might be the ugliest function definition ever created in the
-;; history of PLT Scheme
-
-(define (req-link sesh 
-                  str 
-                  #:post-pool (post-pool #f) 
-                  #:tag-list (tags #f))
-  `(a ((href ,(body-as-url (req)
-                           (post-feature-view sesh 
-                                              #:post-pool post-pool 
-                                              #:tag-list tags))))
-      ,str))
 
 (define (slugify xs)
   (cond
@@ -45,40 +33,6 @@
                  (slugify 
                    (regexp-split #px"[^[:alnum:]]+" 
                                  (rec-prop feat 'body)))))))
-
-(define (index-page-view sesh)
-  (page
-    #:design (base-design)
-    `(div ((id "docindex"))
-          (h1 "lawnelephant")
-          (div ((id "bd"))
-               (div ((id "elephant-holder"))
-                    (a ((href "/tag/"))
-                       (img ((src "i/elephant.jpg")
-                             (alt "The logo for lawnelephant. It looks like a green elephant."))))))
-          (div ((id "indexft")) 
-               (div ((class "intro")) 
-                    (a ((href "/tag/")) "browse all the posts on lawnelephant"))
-               (div ((id "tagcloudexplained")) "Tags on lawnelephant:")
-               (div ((id "tagcloud"))
-
-                    ,@(map (lambda (t)
-                             `(span ,(tag-subst t #:supress-hash #t) " "))
-                           (gen-tag-list (get-feature-requests-generic))))
-               (ul 
-                 ,(li-a "http://blog.lawnelephant.com/post/74637624/introducing-lawnelephant-com" "about")
-                 ,(li-a "http://blog.lawnelephant.com" "blog")
-                 ,(li-a "http://github.com/vegashacker/lawnelephant/tree/master" "source code")
-                 ,(li-a "mailto:ask@lawnelephant.com" "ask@lawnelephant.com")
-                 ,(li-a "http://twitter.com/lawnelephant" "@lawnelephant"))
-               (div ((id "adage"))
-                    ,(let* ((adages (get-feature-requests-generic #:restricted-to (cut has-tag? <> "adage")))
-                            (adage (list-ref adages (random (length adages)))))
-                       `(span ,(markup-body (rec-prop adage 'body)))))
-
-               ;; XXX goog analytics really needs to be just before the closing body tag, but I
-               ;; don't know how to put it there just yet
-               ,(raw-str goog-analytics)))))
 
 (define (post-feature-view sesh 
                            #:post-pool (post-pool #f) 
@@ -123,6 +77,9 @@
                (ul ,(feature-req-view sesh feat-id #:reply-redirect (gen-feature-link feat-id))))
           ,(div-footer))))
 
+(define (gen-rss-page tag) "")
+
+
 (define (gen-tag-page sesh tag)
   (let* ((tags (if tag 
                  (regexp-split #px"[^[:alnum:]]" tag)
@@ -135,20 +92,27 @@
                                          (format "~A at lawnelephant" it)
                                          "all posts at lawnelephant"))
       `(div ((id "doc"))
+            (div ((class "tbd")) (h1 "lawnelehant: twitter + tipjoy + threads + tags"))
             ,(awesomecloud post-pool tags)
             ,(subhead-div sesh #:post-pool post-pool #:tag-list tags)
             (div ((id "bd"))
                  (ul ,@(map (cut feature-req-view sesh <>) post-pool)))
-            ,(div-footer)))))
+            ,(div-footer)
+
+            (div ((id "adage"))
+                 ,(let* ((adages (get-feature-requests-generic #:restricted-to (cut has-tag? <> "adage")))
+                         (adage (list-ref adages (random (length adages)))))
+                    `(span ,(markup-body (rec-prop adage 'body)))))))))
 
 ;; note: use delete-duplicates to handle posts like: "#idoh #idoh something ..."
 
-(define (awesomecloud post-pool tag-list) 
+(define (awesomecloud post-pool tag-list #:title (title #f)) 
   `(div ((id "awesomecloud")) 
-        (a ((href "/") 
-            (id "text-logo")) "lawnelephant")
-        (span ((id "arrow"))
-              ,(raw-str "&rarr;"))
+        ,(xexpr-if title
+                   `(span (a ((href "/") 
+                              (id "text-logo")) ,title)
+                          (span ((id "arrow")))
+                          ,(raw-str "&rarr;")))
         ,@(map (lambda (t) (tag-subst t #:supress-hash #t #:tag-list tag-list))
                (delete-duplicates (gen-tag-list post-pool)))))
 
@@ -156,9 +120,14 @@
                      #:post-pool (post-pool #f) 
                      #:tag-list (tags #f))
   `(div ((id "posta"))
-             ,(req-link sesh "post" #:post-pool post-pool #:tag-list tags)))
-
-
+        ,(form '((body "" text))
+               #:submit-label "post"
+               #:init `((type . post)
+                        (author. ,(session-id sesh))
+                        (body . ,(post-pre-pop-tag-str tags)))
+               #:skip-br #t
+               #:validate feature-request-validator
+               #:on-done (lambda (x) (redirect-to "/tag")))))
 
 (define (request-feature-form-view sesh tags)
   (form '((body "" long-text))
@@ -166,9 +135,6 @@
         #:init `((type . post)
                  (author. ,(session-id sesh))
                  (body . ,(post-pre-pop-tag-str tags)))
-        #:error-wrapper (lambda (error-form-view)
-                          (index-page-view sesh #:form-view
-                                           (lambda (sesh) error-form-view)))
         #:validate feature-request-validator
         #:on-done (lambda (x) (redirect-to "/tag"))))
 
@@ -193,38 +159,37 @@
 
 (define (feature-req-view sesh feat #:reply-redirect (reply-redirect #f))
   `(li ((id ,(format "~A" (rec-id feat))))
-
-       (span ((class "explanation"))
-             ,(post-body feat))
-       ;; if the reply is coming from a permalink, then redirect back to the permalink
-       ;; where is the best place to redirect to from elsewhere?
-
+       (span ((class "explanation")) ,(post-body feat))
        (span ((class "ago")) ,(format " ~A with " (time-ago (rec-prop feat 'created-at))))
        (span ((class "pts")) ,(format "~A" (vote-score feat)))
        (span ((class "ago")) ,(format " vote~A" (if (eq? 1 (vote-score feat)) "" "s")))
-       (span ((class "reply")) 
-             ,(comment-on-item-link feat sesh #:redirect-to (aif reply-redirect it "/tag"))) 
-
+       ,(comment-on-item-link feat sesh #:redirect-to (aif reply-redirect it "/tag")) 
        ,(xexpr-if (rec-type-is? feat 'post)
-          `(span ((class "features-only"))
-                 ,(xexpr-if (in-admin-mode?)
-                            (delete-entry-view feat))
+                  `(span ((class "features-only"))
+                         ,(xexpr-if (in-admin-mode?)
+                                    (delete-entry-view feat))
 
-                 ,(xexpr-if (and (not (completed? feat))
-                                 (in-admin-mode?))
-                            (mark-as-completed-view feat))
-                 (span ((class "share"))
-                       ,(web-link "share" (gen-feature-link feat)))))
+                         ,(xexpr-if (and (not (completed? feat))
+                                         (in-admin-mode?))
+                                    (mark-as-completed-view feat))))
+
        ,(xexpr-if (can-vote-on? sesh feat)
                   `(a ((href ,(make-voter-url sesh feat "up"))
                        (class "up"))
                       ,(raw-str "&#9734;")))
-
-
        ;XXX doesn't look proper, shouldn't I be able to just (when (get-comments feat) ...)
+       (div ((class "inline-reply"))
+            ,(form '((body "" text))
+                   #:submit-label "reply"
+                   #:skip-br #t
+                   #:init `((type . comment)
+                            (author . ,(session-id sesh)))
+                   #:on-done (lambda (comment-rec)
+                               (add-child-and-save! feat 'comments comment-rec)
+                               (redirect-to (format "/tag/#~A" (rec-id comment-rec))))))
        ,(xexpr-if (> (count-comments feat) 0)
-          `(ul ((class "indent")) ,@(map (λ(x) (feature-req-view sesh x #:reply-redirect reply-redirect))
-                                         (get-comments feat))))))
+                  `(ul ((class "indent")) ,@(map (λ(x) (feature-req-view sesh x #:reply-redirect reply-redirect))
+                                                 (get-comments feat))))))
 
 (define (delete-entry-view feat-req-rec)
   (** " "
