@@ -92,11 +92,11 @@
                                          (format "~A at lawnelephant" it)
                                          "all posts at lawnelephant"))
       `(div ((id "doc"))
-            (div ((class "tbd")) (h1 "lawnelehant: twitter + tipjoy + threads + tags"))
+            (div ((class "tbd")) (h1 "lawnelehant: twitter + threads + tags"))
             ,(awesomecloud post-pool tags)
             ,(subhead-div sesh #:post-pool post-pool #:tag-list tags)
             (div ((id "bd"))
-                 (ul ,@(map (cut feature-req-view sesh <>) post-pool)))
+                 (ul ,@(map (cut feature-req-view sesh #:tags tags <>) post-pool)))
             ,(div-footer)
 
             (div ((id "adage"))
@@ -157,7 +157,7 @@
       (else 
         (make-ago-string "second" ago)))))
 
-(define (feature-req-view sesh feat #:reply-redirect (reply-redirect #f))
+(define (feature-req-view sesh feat #:reply-redirect (reply-redirect #f) #:tags (tags #f))
   `(li ((id ,(format "~A" (rec-id feat))))
        (span ((class "explanation")) ,(post-body feat))
        (span ((class "ago")) ,(format " ~A with " (time-ago (rec-prop feat 'created-at))))
@@ -186,9 +186,15 @@
                             (author . ,(session-id sesh)))
                    #:on-done (lambda (comment-rec)
                                (add-child-and-save! feat 'comments comment-rec)
-                               (redirect-to (format "/tag/#~A" (rec-id comment-rec))))))
+                               (redirect-to (format "/tag/~A#~A" 
+                                                    (if tags (tags-to-url tags) "") 
+                                                    (rec-id comment-rec))))))
        ,(xexpr-if (> (count-comments feat) 0)
-                  `(ul ((class "indent")) ,@(map (λ(x) (feature-req-view sesh x #:reply-redirect reply-redirect))
+                  `(ul ((class "indent")) 
+                       ,@(map (λ(x) (feature-req-view sesh 
+                                                       x 
+                                                       #:tags tags
+                                                       #:reply-redirect reply-redirect))
                                                  (get-comments feat))))))
 
 (define (delete-entry-view feat-req-rec)

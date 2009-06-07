@@ -11,6 +11,7 @@ input {
 }
 
 .inline-reply  form {
+    margin-left: 1em;
     font-size: 1em;
 }
 

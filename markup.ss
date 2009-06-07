@@ -7,6 +7,7 @@
 
 (provide markup-body
          tag-subst 
+         tags-to-url
          )
 
 ;; This URL finding code to eventually go in LeftParen...
